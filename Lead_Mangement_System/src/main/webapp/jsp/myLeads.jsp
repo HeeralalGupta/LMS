@@ -5,9 +5,9 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>LMS help</title>
+<title>All Leads</title>
 </head>
 <body>
-
+	<h2>All leads</h2>
 </body>
 </html>

@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,14 +7,14 @@
  <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
+    <title>Sign up</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
 
     <link rel="stylesheet" href="login.css" />
-<title>Login test</title>
+
 <style>
 	*{
   margin: 0;
@@ -154,7 +156,7 @@ h2{
 </style>
 </head>
 <body>
-	<form action = "RegisterUser" method = "post">
+	<form action = "RegisterUsers" method = "post">
     <div class="login_form_container">
       <div class="login_form">
         <h2>Sign Up</h2>

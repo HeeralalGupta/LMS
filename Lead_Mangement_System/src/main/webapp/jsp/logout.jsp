@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>LMS help</title>
+<title>Logout</title>
 </head>
 <body>
 
