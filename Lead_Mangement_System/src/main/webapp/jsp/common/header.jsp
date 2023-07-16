@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+<header  style="position: fixed; left: 0; top: 0; width: 100%; background-color: #f5f5f5; text-align: center;">
+	LEAD MANAGEMENT SYSTEM
+</header>
+=======
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!Doctype HTML>
@@ -327,3 +332,4 @@ td, th {
 
 
 	</html>
+>>>>>>> refs/remotes/origin/gopal2

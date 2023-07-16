@@ -1,3 +1,17 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leads Management System</title>
+</head>
+<body>
+<%-- 	<%@include file="../jsp/signup.jsp" %> --%>
+	<%@include file="../jsp/dashboard.jsp" %>
+</body>
+</html>
+=======
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -190,3 +204,4 @@ h2{
 
   </script>
 </html>
+>>>>>>> refs/remotes/origin/gopal2

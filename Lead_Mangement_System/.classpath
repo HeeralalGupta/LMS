@@ -13,6 +13,14 @@
 			<attribute name="owner.project.facets" value="jst.web"/>
 		</attributes>
 	</classpathentry>
+<<<<<<< HEAD
+	<classpathentry exported="true" kind="lib" path="C:/sql connectors/javax.servlet-api-4.0.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+=======
 	<classpathentry kind="lib" path="C:/apache-tomcat-9.0.72/lib/servlet-api.jar"/>
+>>>>>>> refs/remotes/origin/gopal2
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
