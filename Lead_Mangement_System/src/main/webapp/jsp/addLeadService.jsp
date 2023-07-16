@@ -41,10 +41,10 @@
 	
 	if(st>0) {
 		session.setAttribute("lead-added", "Lead Added Successfuly");
-		response.sendRedirect("jsp/dashboard.jsp");
+		response.sendRedirect("dashboard.jsp");
 	}else {
 		session.setAttribute("lead-failed", "Something went Wrong! Please Try Again.");
-		response.sendRedirect("jsp/dashboard.jsp");
+		response.sendRedirect("dashboard.jsp");
 	}
 
 %>

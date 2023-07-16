@@ -2,11 +2,12 @@
 body{
     margin:0px;
     padding: 0px;
-    background-color:#1b203d;
+    background-color:#1b203d !important;
     font-family: system-ui;
 }
 :root{
     --light-color: #272c4a;
+    --dark-color:#1b203d ;
 }
 .clearfix{
     clear: both;
@@ -237,9 +238,8 @@ td, th {
     cursor: pointer;
 }
 .add-lead-btn{
-    background: var(--light-color);
     color: white;
-    width: 95%;
+    width: 100%;
     padding: 1.5rem;
 }
 .form-container{
@@ -251,7 +251,7 @@ td, th {
     /*justify-content: center;*/
 }
 .form div{
-    width: 50%;
+    width: 100%;
 }
 .client-info div,.lead-info div{
     display: flex;
@@ -260,15 +260,18 @@ td, th {
 .client-info div input,.lead-info div input,.client-info div textArea,.lead-info div textArea{
     outline: none;
     border: none;
-    width: 170%;
+    width: 97%;
     padding: .4rem 1rem;
     font-size: 1rem;
     border-radius: .4rem; 
 }
+.lead-info div textArea{
+    height: 195px;
+}
 .client-info div select,.lead-info div select{
     outline: none;
     border: none;
-    width: 181%;
+    width: 97%;
     padding: .4rem 1rem;
     font-size: 1rem;
     border-radius: .4rem; 
@@ -279,13 +282,13 @@ td, th {
 }
 .lead-info div.btn-div{
     margin-top: .9rem;
-    width:53.5%;
+    width: 53.5%;
     
 }
 .lead-info div.btn-div .btn-add{
     color: white;
     font-size: 1.5rem;
-    background-color: #1b203d;
+    background-color: var(--light-color);
     transition: all .5s ease-in;
 }
 .lead-info div.btn-div .btn-add:hover{
@@ -301,4 +304,26 @@ td, th {
     color: white;
     width: 99%;
     font-size: 2rem;
+}
+.modal-dialog .modal-content{
+	background-color: var(--dark-color) !important;
+	color:white;
+}
+
+.btn-costom-add-lead{
+	outline: none;
+    border: 1px solid white;
+    color: white;
+    background-color:var(--dark-color);
+    padding: .4rem 1rem;
+    font-size: 1rem;
+    font-weight:bold;
+    border-radius: 2rem; 
+    transition:all .3s ease-in;
+}
+
+.btn-costom-add-lead:hover{
+	border: 1px solid var(--dark-color);
+    color: var(--dark-color);
+    background-color: white;
 }
