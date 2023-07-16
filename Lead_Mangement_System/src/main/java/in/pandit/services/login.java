@@ -29,7 +29,11 @@ public class login extends HttpServlet {
 		String password = request.getParameter("pass");
 		
 		UserEntity user = UserDao.login(email, password);
-		
+		System.out.println(user.getName());
+		System.out.println(user.getEmail());
+		System.out.println(user.getPassword());
+		System.out.println(user.getMobile());
+		System.out.println(user.getId());
 		try {
 			if(user!=null) {
 				session.setAttribute("login-succ", user);

@@ -22,9 +22,9 @@ public class UserDao {
 			ResultSet rst = pst.executeQuery();
 			while(rst.next()) {
 				user.setId(rst.getInt("id"));
+				user.setName(rst.getString("name"));
 				user.setEmail(rst.getString("email"));
 				user.setMobile(rst.getString("mobile"));
-				user.setName(rst.getString("name"));
 				user.setPassword(rst.getString("password"));
 			}
 		}catch (Exception e) {

@@ -8,9 +8,9 @@ public class DatabaseConnection {
 	public static Connection getConnection() {
 		Connection conn = null;
 		try {
-			String url = "jdbc:postgresql://localhost:5432/LMS";
+			String url = "jdbc:postgresql://localhost:5432/lms";
 			String user = "postgres";
-			String pass = "admin";
+			String pass = "12345";
 			Class.forName("org.postgresql.Driver");
 			conn = DriverManager.getConnection(url, user, pass);
 			if (conn != null) {

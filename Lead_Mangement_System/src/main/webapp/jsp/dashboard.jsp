@@ -5,28 +5,22 @@
 <!Doctype HTML>
 <html>
 <head>
-<title></title>
-<link rel="stylesheet" href="css/style.css" type="text/css" />
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="../css/style.css" />
+	<title></title>
+	<link rel="stylesheet" href="css/style.css" type="text/css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
 	<div class="main-container">
 		<div id="mySidenav" class="sidenav">
-			<p class="logo">
-				<span>L </span>M S
-			</p>
-			<a href="homejsp.jsp" class="icon-a"><i
-				class="fa fa-dashboard icons"></i> Dashboard</a> <a href="myleads.jsp"
-				class="icon-a"><i class="fa fa-users icons"></i> My Leads</a> <a
-				href="profile.jsp" class="icon-a"><i class="fa fa-list icons"></i>
-				Profile</a> <a href="tasks.jsp" class="icon-a"><i
-				class="fa fa-shopping-bag icons"></i> Tasks</a> <a href="about.jsp"
-				class="icon-a"><i class="fa fa-users icons"></i> About </a> <a
-				href="faq.jsp" class="icon-a"><i class="fa fa-user icons"></i>
-				FAQ</a> <a href="isLogout.jsp" class="icon-a"><i
-				class="fa fa-list-alt icons"></i> Logout</a>
+			<p class="logo"> <span>L </span>M S </p>
+			<a href="homejsp.jsp" class="icon-a"><i class="fa fa-dashboard icons"></i> Dashboard</a>
+			<a href="myleads.jsp" class="icon-a"><i class="fa fa-users icons"></i> My Leads</a>
+			<a href="profile.jsp" class="icon-a"><i class="fa fa-list icons"></i> Profile</a> 
+			<a href="tasks.jsp" class="icon-a"><i class="fa fa-shopping-bag icons"></i> Tasks</a> 
+			<a href="about.jsp" class="icon-a"><i class="fa fa-users icons"></i> About </a> 
+			<a href="faq.jsp" class="icon-a"><i class="fa fa-user icons"></i> FAQ</a> 
+			<a href="logout.jsp" class="icon-a"><i class="fa fa-list-alt icons"></i> Logout</a>
 		</div>
 		<div id="main">
 			<div class="head">
@@ -36,17 +30,16 @@
 						style="font-size: 30px; cursor: pointer; color: white;"
 						class="nav2"> Dashboard</span>
 				</div>
-
 				<div class="col-div-6">
 					<div class="profile">
 
 						<img src="img/user.png" class="pro-img" />
 						<p style="font-size: 20px;">
 							<%
-							UserEntity user = (UserEntity) session.getAttribute("login-succ");
+							UserEntity user = (UserEntity)session.getAttribute("login-succ");
 							if (user != null) {
 							%>
-							<%= user.getName() %>
+								<%= user.getName() %>
 							<%
 							}
 							%>
@@ -95,8 +88,27 @@
 				</div>
 			</div>
 			<div class="clearfix"></div>
-			<br>
-			<h2 class="add">Add New Lead</h2>
+			<br>	
+		</div>
+	</div>
+	
+	<div class="clearfix"></div>
+	<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Add Leads
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <!--  -->
+        <h2 class="add">Add New Lead</h2>
 			<div class="add-lead-btn">
 				<form class="form" action="AddLead" method="post">
 					<div class="client-info">
@@ -178,14 +190,16 @@
 					</div>
 				</form>
 			</div>
-		</div>
-	</div>
-	</div>
-
-	<div class="clearfix"></div>
-	</div>
-
-	</div>
+			
+			<!--  -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>
