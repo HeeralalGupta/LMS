@@ -155,42 +155,27 @@ h2{
 </style>
 </head>
 <body>
-	<form action = "login" method = "post">
-    <div class="login_form_container">
-      <div class="login_form">
-        <h2>Login</h2>
-        <div class="input_group">
-          <i class="fa fa-envelope"></i>
-          <input
-          	name = "email"
-            type="email"
-            placeholder="Email"
-            class="input_text"
-            autocomplete="off"
-            required
-          />
-        </div>
-        <div class="input_group">
-          <i class="fa fa-unlock-alt"></i>
-          <input
-          	name = "pass"
-            type="password"
-            placeholder="Password"
-            class="input_text"
-            autocomplete="off"
-            required
-          />
-        </div>
-        <div class="button_group" id="login_button">
-          <button type = "submit">Login</button>
-        </div>
-        <div class="fotter">
-          <a>Forgot Password ?</a>
-          <a href = "signup.jsp">SingUp</a>
-        </div>
-      </div>
-      
-    </div>
+	<form action="login" method ="post">
+	    <div class="login_form_container">
+	      <div class="login_form">
+	        <h2>Login</h2>
+	        <div class="input_group">
+	          <i class="fa fa-envelope"></i>
+	          <input name="email" type="email" placeholder="Email" class="input_text" autocomplete="off" required />
+	        </div>
+	        <div class="input_group">
+	          <i class="fa fa-unlock-alt"></i>
+	          <input name="pass" type="password" placeholder="Password" class="input_text" autocomplete="off" required />
+	        </div>
+	        <div class="button_group" id="login_button">
+	          <button type = "submit">Login</button>
+	        </div>
+	        <div class="fotter">
+	          <a>Forgot Password ?</a>
+	          <a href = "signup.jsp">SingUp</a>
+	        </div>
+	      </div>
+	    </div>
     </form>
 </body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
