@@ -157,6 +157,8 @@ h2{
     <div class="login_form_container">
       <div class="login_form">
         <h2>Login</h2>
+        
+        <center><span style = "color: red;">${error}</span></center>
         <div class="input_group">
           <i class="fa fa-envelope"></i>
           <input

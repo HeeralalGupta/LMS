@@ -1,7 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<!Doctype HTML>
-	<html>
+    <%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="java.sql.Connection"%>
+<%@page import = "in.pandit.persistance.DatabaseConnection" %>
+    
+<html>
 	<head>
 		<title></title>
 		<link rel="stylesheet" href="css/style.css" type="text/css"/>
@@ -221,22 +226,98 @@ td, th {
   font-weight: 700;
   font-size: 2em;
 }
-		</style>
-	</head>
+/* Css for add lead form */
+.boxheading{
+	width: 96%;
+	height: 50px;
+	background-color: #272c4a;
+	margin-left: 10px;
+	padding:10px;
+}
+.boxheading p{
+	 font-size: 25px;
+    color: white;
+    line-height: 30px;
+    padding-left: 10px;
+    margin-top: 7px;
+    display: inline-block;
+}
+.boxform{
+	width: 96%;
+	height: 470px;
+	background-color: #272c4a;
+	margin-left: 10px;
+	padding:10px;
+}
+input{
+	border: none;
+	border-radius: 2px;
+	padding: 7px;
+	height: 30px;
+	width: 250px;
+	font-size: 17px;
+	background-color: off-white;
+}
+select{
+	border: none;
+	border-radius: 2px;
+	padding: 7px;
+	height: 30px;
+	width: 250px;
+	font-size: 17px;
+	background-color: off-white;
+}
 
+input[type=text] {
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+}
 
-	<body>
-		
-		<div id="mySidenav" class="sidenav">
+input[type=text]:focus {
+  border: 2px solid green;
+}
+.btn{
+	width: 250px;
+	height: 35px;
+	background-color: rgba(12, 188, 6, 0.8);
+	font-size: 15px;
+	color: white;
+	border: none;
+	border-radius: 5px;
+}
+.btn:hover{
+	box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+	transition: 0.5s ease;
+	background-color: rgba(7, 217, 0, 0.8);
+}
+</style>
+</head>
+
+<body>
+	<% 
+		if(session.getAttribute("email_id") == null)
+		{
+			response.sendRedirect("login.jsp");
+		}
+	%>
+	
+	
+	
+	<div id="mySidenav" class="sidenav">
 		<p class="logo"><span>L </span>M S</p>
-	  <a href="#" class="icon-a"><i class="fa fa-dashboard icons"></i>   Dashboard</a>
-	  <a href=""class="icon-a"><i class="fa fa-users icons"></i>   My Leads</a>
-	  <a href="#"class="icon-a"><i class="fa fa-list icons"></i>   Profile</a>
-	  <a href="#"class="icon-a"><i class="fa fa-shopping-bag icons"></i>  Tasks</a>
-	  <a href="#"class="icon-a"><i class="fa fa-users icons"></i>  About </a>
-	  <a href="#"class="icon-a"><i class="fa fa-user icons"></i>   FAQ</a>
-	  <a href="#"class="icon-a"><i class="fa fa-list-alt icons"></i>   Logout</a>
-
+	  <a href="dashboard.jsp" class="icon-a"><i class="fa fa-dashboard icons"></i>   Dashboard</a>
+	  <a href="myLeads.jsp"class="icon-a"><i class="fa fa-users icons"></i>   My Leads</a>
+	  <a href="profile.jsp"class="icon-a"><i class="fa fa-user icons"></i>   Profile</a>
+	  <!-- <a href="#"class="icon-a"><i class="fa fa-shopping-bag icons"></i>  Task</a> -->
+	  <!-- <a href="#"class="icon-a"><i class="fa fa-users icons"></i>  About </a> -->
+	  <a href="help.jsp"class="icon-a"><i class="fa fa-list icons"></i>   Help</a>
+	  <form action = "logout">
+	  <a href="index.jsp"class="icon-a"><i class="fa fa-list-alt icons"></i>  Logout</a>
+		</form>
 	</div>
 	<div id="main">
 
@@ -249,8 +330,8 @@ td, th {
 		<div class="col-div-6">
 		<div class="profile">
 
-			<img src="img/user.png" class="pro-img" />
-			<p style="font-size:20px;">PanditSoft <span  style="font-size:12px;">Web Developmemt</span></p>
+			<img src="image/xyz.jfif" class="pro-img" />
+			<p style="font-size:20px;">PanditSoft <span  style="font-size:12px;">Web Development</span></p>
 		</div>
 	</div>
 		<div class="clearfix"></div>
@@ -261,39 +342,118 @@ td, th {
 		
 		<div class="col-div-3">
 			<div class="box">
-				<p>0<br/><span>My Leads</span></p>
+				<p> <%
+						Connection connect = DatabaseConnection.getConnection();
+						int count = 0;
+						PreparedStatement st = connect.prepareStatement("select max(id) as id from leads");
+
+						ResultSet rs = st.executeQuery();
+						while (rs.next()) {
+						count = rs.getInt("id");
+						}
+						out.print(count);
+					%> 
+	<br/><span>Total Leads</span></p>
 				<i class="fa fa-users box-icon"></i>
 			</div>
 		</div>
 		<div class="col-div-3">
 			<div class="box">
-				<p>0<br/><span>Projects</span></p>
-				<i class="fa fa-list box-icon"></i>
+				<p>1<br/><span>New Leads</span></p>
+				<i class="fa fa-cart-plus box-icon"></i>
 			</div>
 		</div>
 		<div class="col-div-3">
 			<div class="box">
-				<p>0<br/><span>Tasks</span></p>
-				<i class="fa fa-shopping-bag box-icon"></i>
+				<p>2<br/><span>Social Media</span></p>
+				<i class="fa fa-globe box-icon"></i>
 			</div>
 		</div>
 		<div class="col-div-3">
 			<div class="box">
-				<p>0<br/><span>Orders</span></p>
+				<p>0<br/><span>Enrolled</span></p>
 				<i class="fa fa-tasks box-icon"></i>
 			</div>
 		</div>
+		
+		
 		<div class="clearfix"></div>
-		<br/><br/>
+		<br/>
 		
 		
+		<!-- Adding new leads form -->
+		<div class="clearfix"></div>
+		<br/>
+		
+		<div class="col-12">
+			<div class="boxheading">
+				<p>Add New Lead</p>
+				<%
+					
+				%>
 			</div>
 		</div>
+		<hr style="width:97%;text-align:left;margin-left:10px">
+		<div class="col-12">
+			<div class="boxform">
+				<form action = "addNewLead" method = "post">
+					<table>
+						<tr>
+							<td>Name </td>
+							<td><input type = "text" name = "name" required/></td>
+							<td>Email </td>
+							<td><input type = "email" name = "email" required/></td>
+						</tr>
+						<tr>
+							<td>Address </td>
+							<td><input type = "text" name = "address" required/></td>
+							<td>Mobile </td>
+							<td><input type = "tel" name = "mobile" maxlength= "10" required/></td>
+						</tr>
+						<tr>
+							<td>Source </td>
+							<td><input type = "text" name = "source" required/></td>
+							<td>Date </td>
+							<td><input type = "date" name = "date" required/></td>
+						</tr>
+						<tr>
+							<td>Time </td>
+							<td><input type = "time" name = "time" required/></td>
+							<td>Owner </td>
+							<td><input type = "text" name = "owner" required/></td>
+						</tr>
+						<tr>
+							<td>Current Owner </td>
+							<td><input type = "text" name = "currentOwner" required/></td>
+							<td>Status </td>
+							<td>
+							<select name = "status" required>
+								<option selected disabled > --Select--</option>
+								<option>New</option>
+								<option>Progress</option>
+								<option>Finished</option>
+							</select>
+							</td>
+						</tr>
+						<tr>
+							<td>Priority </td>
+							<td>
+							<select name = "priority" required>
+								<option selected disabled > --Select--</option>
+								<option>Low</option>
+								<option>Medium</option>
+								<option>High</option>
+							</select>
+							</td>
+							<td></td>
+							<td><button type= "submit" class = "btn">Add Lead</button></td>
+						</tr>		
+					</table>
+				</form>
+			</div>
+		</div>	
+		
 		</div>
-			
-		<div class="clearfix"></div>
-	</div>
-
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>
@@ -325,5 +485,5 @@ td, th {
 
 	</body>
 
-
-	</html>
+</body>
+</html>

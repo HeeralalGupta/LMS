@@ -14,7 +14,7 @@ public class DatabaseConnection {
 			Class.forName("org.postgresql.Driver");
 			conn = DriverManager.getConnection(url, user, pass);
 			if (conn != null) {
-				System.out.println("Database connected successfully");
+//				System.out.println("Database connected successfully");
 			}
 		}catch(Exception e) {
 			System.out.println(e);

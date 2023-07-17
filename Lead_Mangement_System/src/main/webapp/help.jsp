@@ -5,9 +5,9 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Add Leads</title>
+<title>LMS help</title>
 </head>
 <body>
-
+	<h2>This is help section</h2>
 </body>
 </html>

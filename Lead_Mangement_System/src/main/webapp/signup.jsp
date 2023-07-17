@@ -215,7 +215,7 @@ h2{
           <button type = "submit">Register</button>>
         </div>
         <div class="fotter">
-          <a href = "index.html">Back to Login</a>
+          <a href = "index.jsp">Back to Login</a>
         </div>
       </div>
       

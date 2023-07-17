@@ -12,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 
 @WebServlet("/login")
@@ -21,6 +22,7 @@ public class login extends HttpServlet {
    
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Fetching data from login from
+			
 				String email = request.getParameter("email");
 				String password = request.getParameter("pass");
 				
@@ -46,11 +48,16 @@ public class login extends HttpServlet {
 				}catch (Exception e) {
 					System.out.println(e);
 				}
+				
 				if (email.equals(email1) && password.equals(password1)) {
-					RequestDispatcher rd1 = request.getRequestDispatcher("jsp/dashboard.jsp");
-					rd1.forward(request, response);
+					HttpSession session = request.getSession();
+					session.setAttribute("email_id", email);
+					response.sendRedirect("dashboard.jsp");
 				}
 				else {
+					request.setAttribute("error", "Invalid Email or Password !");
+					RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+					rd.include(request, response);
 					
 				}
 	}
