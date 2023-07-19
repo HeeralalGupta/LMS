@@ -299,9 +299,9 @@ input[type=text]:focus {
 
 <body>
 	<% 
-		if(session.getAttribute("email_id") == null)
+		if(session.getAttribute("email") == null)
 		{
-			response.sendRedirect("login.jsp");
+			response.sendRedirect("index.jsp");
 		}
 	%>
 	
@@ -482,7 +482,7 @@ input[type=text]:focus {
 	 });
 
 	</script>
-
+	
 	</body>
 
 </body>

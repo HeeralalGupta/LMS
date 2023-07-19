@@ -51,7 +51,7 @@ public class login extends HttpServlet {
 				
 				if (email.equals(email1) && password.equals(password1)) {
 					HttpSession session = request.getSession();
-					session.setAttribute("email_id", email);
+					session.setAttribute("email", email);
 					response.sendRedirect("dashboard.jsp");
 				}
 				else {

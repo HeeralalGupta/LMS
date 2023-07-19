@@ -233,7 +233,7 @@ td, th {
 /* Css for add lead form */
 .boxheading{
 	width: 96%;
-	height: 550px;
+	height: 625px;
 	background-color: #272c4a;
 	margin-left: 10px;
 	padding:10px;
@@ -263,6 +263,38 @@ table tr:nth-child(even){
 		table tbody tr {
 			display: none;
 		}
+
+/* css for pregress bar */
+.animated-progress {
+  width: 200px;
+  height: 28px;
+  border-radius: 5px;
+  margin: 10px 10px;
+  border: 1px solid rgb(189, 113, 113);
+  overflow: hidden;
+  position: relative;
+}
+
+.animated-progress span {
+  height: 100%;
+  display: block;
+  width: 0;
+  color: rgb(255, 251, 251);
+  line-height: 30px;
+  position: absolute;
+  text-align: end;
+  padding-right: 5px;
+}
+
+.progress-green span {
+  background-color: green;
+}
+.progress-purple span {
+  background-color: #d35400;
+}
+.progress-red span {
+  background-color: red;
+}
 
 </style>
 
@@ -357,7 +389,7 @@ table tr:nth-child(even){
 
 		<div class="container-fluid">
 				<div class="form-group"> 	<!--		Show Numbers Of Rows 		-->
-			 		<select class  ="form-control" name="state" id="maxRows">
+			 		<select class  ="form-control bg-dark text-white" name="state" id="maxRows">
 						 <option value="5000">Show ALL Rows</option>
 						 <option value="5">5</option>
 						 <option value="10">10</option>
@@ -407,6 +439,8 @@ table tr:nth-child(even){
 								String source = rs.getString(3);
 								String date = rs.getString(4);
 								String priority = rs.getString(5);
+								
+								
 				
 								out.print("<tr>");
 				
@@ -414,9 +448,21 @@ table tr:nth-child(even){
 								out.print("<td>" + email + "</td>");
 								out.print("<td>" + source + "</td>");
 								out.print("<td>" + date + "</td>");
-								out.print("<td>" + priority + "</td>");
+								if (priority.equals("Low")){
+									
+									out.print("<td><center><div class = 'animated-progress progress-green'><span data-progress='33'></span>Low</div></div></center></td>");
+								}
+								if (priority.equals("High")){
+									
+									out.print("<td><center><div class = 'animated-progress progress-red'><span data-progress='95'></span>High</div></div></center></td>");
+								}
+								if (priority.equals("Medium")){
+	
+									out.print("<td><center><div class = 'animated-progress progress-purple'><span data-progress='66'></span>Medium</div></div></center></td>");
+								}
+								
 								out.print("<td><form action ='' method = 'post'><button type = 'submit' class = 'btn btn-primary'  name = 'update'>Update</button></form></td>");
-								out.print("<td><form action = '' method = 'post'><button type = 'submit' class = 'btn btn-danger' name = 'delete'>Delete</button></form></td>");
+								out.print("<td><form action ='' method = 'post'><button type = 'submit' class = 'btn btn-danger' name = 'delete'>Delete</button></form></td>");
 				
 								out.print("</tr>");
 							
@@ -611,6 +657,7 @@ function limitPagging(){
 	}
 }
 
+/* script for back prevent */
 $(function() {
   // Just to append id number for each row
   $('table tr:eq(0)').prepend('<th> S.No. </th>');
@@ -623,7 +670,16 @@ $(function() {
   });
 });
 
-
+/* Script for progress bar */
+$(".animated-progress span").each(function () {
+  $(this).animate(
+    {
+      width: $(this).attr("data-progress") + "%",
+    },
+    1000
+  );
+  $(this).text($(this).attr("data-progress") + "%");
+});
 
 	</script>
 

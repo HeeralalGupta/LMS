@@ -5,6 +5,9 @@
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.Connection"%>
 <%@page import = "in.pandit.persistance.DatabaseConnection" %>
+<%@page import ="java.text.SimpleDateFormat"%>
+<%@page import = "java.util.Date"  %>
+
 <!Doctype HTML>
 	<html>
 	<head>
@@ -360,41 +363,47 @@ table tr:nth-child(even){
 		
 		<div class="col-12">
 			<div class="boxheading">
-				<p>My Profile</p>
-				<img src="image/xyz.jfif" class="profile-img" />	
-				
+				<p style = "margin-top: 20px;">My Profile</p>
+				<img src="image/profile image.png" class="profile-img" />	
+				<hr style="height:2px;border-width:0;color:gray;background-color:gray">
 			
 		<div class="container-fluid">
-				<div class="form-group"> 	<!--		Show Numbers Of Rows 		-->
+				<div class="form-group"> 	
+				<br><br>
 				
+				<% 
+						
+				String name = null;
+				String emailid = null;
+				String mobile = null;
+				try{
+							String email =  session.getAttribute("email").toString(); 
+							
+							Connection connect1 = DatabaseConnection.getConnection();
+							
+							
+							PreparedStatement pstmt = connect1.prepareStatement("select name, email, mobile from users where email = ?");			
+							pstmt.setString(1, email);			
+							ResultSet rst = pstmt.executeQuery();
+						
+						while (rst.next()) {
+							name = rst.getString(1);
+							emailid = rst.getString(2);
+							mobile = rst.getString(3);
+						}
+						
+						}catch(Exception e){
+							System.out.println(e);
+						}
+					%>
 				
+				<h3 style = "color: white;">Name : <%out.print(name); %></h3><br>
+				<hr>
+				<h3 style = "color: white;">Email :	<% out.print(emailid); %></h3><br>
+				<hr>
+				<h3 style = "color: white;">Mobile : <% out.print(mobile); %></h3><br>
+				<hr>
 				
-			 <%
-			 	String email = request.getParameter("email");
-			 	String user = null;
-			 	String emailid = null;
-			 	String mobile = null;
-			 	try{
-	  					Connection connect1 = DatabaseConnection.getConnection();
-	  				
-	  					PreparedStatement ps = connect1.prepareStatement("select name, email, mobile from users where email = ?");
-	  					ps.setString(1, email);
-	  					ResultSet rs1 = ps.executeQuery();
-
-	  					while (rs.next()) {
-	  						user = rs.getString(1);
-	  						emailid = rs.getString(2);
-	  						mobile = rs.getString(3);
-	  					}
-	  					
-	  					out.print("Name  " + user);
-	  					out.print("Email " + emailid);
-	  					out.print("Mobile " +mobile);
-	  					
-	  				}catch(Exception e) {
-	  					System.out.println(e);
-	  				}
-			 	%>
 			 
 		</div>
 
