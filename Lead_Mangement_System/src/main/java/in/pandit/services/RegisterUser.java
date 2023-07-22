@@ -27,6 +27,7 @@ public class RegisterUser extends HttpServlet {
 		String email = request.getParameter("email");
 		String mobile = request.getParameter("mobile");
 		String password = request.getParameter("password");
+		
 		try {
 			Connection connect = DatabaseConnection.getConnection();
 			

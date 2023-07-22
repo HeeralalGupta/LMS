@@ -351,7 +351,7 @@ table tr:nth-child(even){
 						}
 						out.print(count1);
 					%> 
-				<br/><span>My Leads</span></p>
+				<br/><span>Total Leads</span></p>
 				<i class="fa fa-users box-icon"></i>
 			</div>
 		</div>
@@ -420,6 +420,17 @@ table tr:nth-child(even){
   			<%
   			try{
   				Connection connect = DatabaseConnection.getConnection();
+  				String profileName =  null;
+  				// Getting email from dashboard setAttribute
+  				String email2 = session.getAttribute("email").toString(); 
+  				// Getting name form user table
+  				PreparedStatement stmt = connect.prepareStatement("select name from users where email = ?");
+				stmt.setString(1, email2);
+				ResultSet rs3 = stmt.executeQuery();
+				while (rs3.next()) {
+				profileName = rs3.getString(1);
+				}
+  				// This is for id counter
   				int count = 0;
 				PreparedStatement st = connect.prepareStatement("select max(id) as id from leads");
 
@@ -427,10 +438,12 @@ table tr:nth-child(even){
 				while (rs1.next()) {
 				count = rs1.getInt("id");
 				}
-  				PreparedStatement ps = connect.prepareStatement("select name, email, source, date, priority from leads");
+				
+  				PreparedStatement ps = connect.prepareStatement("select name, email, source, date, priority from leads where owner = ?");
 				
 				 /* for (int a = 1; a <= count; a++) {  */
-							
+							ps.setString(1, profileName);		
+					 
 							ResultSet rs = ps.executeQuery();
 							while (rs.next()) {
 								
@@ -440,8 +453,7 @@ table tr:nth-child(even){
 								String date = rs.getString(4);
 								String priority = rs.getString(5);
 								
-								
-				
+												
 								out.print("<tr>");
 				
 								out.print("<td>" + name + "</td>");

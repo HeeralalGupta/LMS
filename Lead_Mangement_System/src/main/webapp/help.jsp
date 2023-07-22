@@ -396,7 +396,7 @@ label{
 						}
 						out.print(count);
 					%> 
-				<br/><span>My Leads</span></p>
+				<br/><span>Total Leads</span></p>
 				<i class="fa fa-users box-icon"></i>
 			</div>
 		</div>

@@ -330,7 +330,7 @@ table tr:nth-child(even){
 						}
 						out.print(count);
 					%> 
-				<br/><span>My Leads</span></p>
+				<br/><span>Total Leads</span></p>
 				<i class="fa fa-users box-icon"></i>
 			</div>
 		</div>
@@ -391,6 +391,8 @@ table tr:nth-child(even){
 							emailid = rst.getString(2);
 							mobile = rst.getString(3);
 						}
+						
+						session.setAttribute("name", name);
 						
 						}catch(Exception e){
 							System.out.println(e);

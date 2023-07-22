@@ -5,6 +5,8 @@
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.Connection"%>
 <%@page import = "in.pandit.persistance.DatabaseConnection" %>
+<%@page import = "java.util.List" %>
+<%@page import = "java.util.ArrayList" %>
     
 <html>
 	<head>
@@ -420,7 +422,32 @@ input[type=text]:focus {
 							<td>Time </td>
 							<td><input type = "time" name = "time" required/></td>
 							<td>Owner </td>
-							<td><input type = "text" name = "owner" required/></td>
+							
+							
+							<td>
+								<select name = "owner" required>
+									<option selected disabled > --Select--</option>
+									
+									<%
+										List<String> lst = new ArrayList<String>();
+										try{
+											String email = session.getAttribute("email").toString();
+											PreparedStatement pstmt = connect.prepareStatement("select name from users");			
+														
+											ResultSet rst = pstmt.executeQuery();
+							
+											while(rst.next()) {
+												lst.add(rst.getString(1));
+											}
+											for(String x : lst){
+												out.print("<option>" + x + "</option>");											}
+											}catch(Exception e){
+												System.out.println(e);
+											}
+									%>
+							</select>
+							</td>
+							
 						</tr>
 						<tr>
 							<td>Current Owner </td>
