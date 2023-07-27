@@ -313,12 +313,13 @@ input[type=text]:focus {
 		<p class="logo"><span>L </span>M S</p>
 	  <a href="dashboard.jsp" class="icon-a"><i class="fa fa-dashboard icons"></i>   Dashboard</a>
 	  <a href="myLeads.jsp"class="icon-a"><i class="fa fa-users icons"></i>   My Leads</a>
+	  <a href="currentLead.jsp"class="icon-a"><i class="fa fa-user-plus icons"></i>   Current Leads</a>
 	  <a href="profile.jsp"class="icon-a"><i class="fa fa-user icons"></i>   Profile</a>
 	  <!-- <a href="#"class="icon-a"><i class="fa fa-shopping-bag icons"></i>  Task</a> -->
 	  <!-- <a href="#"class="icon-a"><i class="fa fa-users icons"></i>  About </a> -->
-	  <a href="help.jsp"class="icon-a"><i class="fa fa-list icons"></i>   Help</a>
+	  <a href="help.jsp"class="icon-a"><i class="fa fa-question-circle icons"></i>   Help</a>
 	  <form action = "logout">
-	  <a href="index.jsp"class="icon-a"><i class="fa fa-list-alt icons"></i>  Logout</a>
+	  <a href="index.jsp"class="icon-a"><i class="fa fa-sign-out icons"></i>  Logout</a>
 		</form>
 	</div>
 	<div id="main">
@@ -421,25 +422,50 @@ input[type=text]:focus {
 						<tr>
 							<td>Time </td>
 							<td><input type = "time" name = "time" required/></td>
-							<td>Owner </td>
+							<td>Owner Email</td>
 							
 							
 							<td>
-								<select name = "owner" required>
-									<option selected disabled > --Select--</option>
-									
-									<%
-										List<String> lst = new ArrayList<String>();
+								<input type = "email" name = "owner"  value = "<% 
+								
+								List<String> lst = new ArrayList<String>();
+								try{
+									String email = session.getAttribute("email").toString();
+									PreparedStatement pstmt = connect.prepareStatement("select email from users where email = ?");			
+									pstmt.setString(1, email);
+									ResultSet rst = pstmt.executeQuery();
+					
+									while(rst.next()) {
+										lst.add(rst.getString(1));
+									}
+									for(String x : lst){
+										out.print(x);											}
+									}catch(Exception e){
+										System.out.println(e);
+									}
+								
+								%>" readonly>
+						
+							</td>
+							
+						</tr>
+						<tr>
+							<td>Current Owner </td>
+							<td>
+							<select name = "currentOwner" required>
+								<option selected disabled > --Select--</option>
+								<%
+										List<String> lst1 = new ArrayList<String>();
 										try{
 											String email = session.getAttribute("email").toString();
-											PreparedStatement pstmt = connect.prepareStatement("select name from users");			
+											PreparedStatement pstmt = connect.prepareStatement("select email from users");			
 														
 											ResultSet rst = pstmt.executeQuery();
 							
 											while(rst.next()) {
-												lst.add(rst.getString(1));
+												lst1.add(rst.getString(1));
 											}
-											for(String x : lst){
+											for(String x : lst1){
 												out.print("<option>" + x + "</option>");											}
 											}catch(Exception e){
 												System.out.println(e);
@@ -448,10 +474,6 @@ input[type=text]:focus {
 							</select>
 							</td>
 							
-						</tr>
-						<tr>
-							<td>Current Owner </td>
-							<td><input type = "text" name = "currentOwner" required/></td>
 							<td>Status </td>
 							<td>
 							<select name = "status" required>

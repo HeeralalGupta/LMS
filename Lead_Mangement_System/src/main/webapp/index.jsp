@@ -195,16 +195,17 @@ h2{
 </body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="login.js"></script>
-  <script>
+  
+  <script type = "text/javascript" >  
+  
   $(".input_text").focus(function(){
 	    $(this).prev('.fa').addclass('glowIcon')
 	})
 	$(".input_text").focusout(function(){
 	    $(this).prev('.fa').removeclass('glowIcon')
 	})
-
-  </script>
-  <script type = "text/javascript" >  
+  
+  //back prevent
     function preventBack() { window.history.forward(); }  
     setTimeout("preventBack()", 0);  
     window.onunload = function () { null };  

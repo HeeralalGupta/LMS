@@ -7,7 +7,9 @@
 <%@page import = "in.pandit.persistance.DatabaseConnection" %>
 <%@page import ="java.text.SimpleDateFormat"%>
 <%@page import = "java.util.Date"  %>
-
+<%@page import = "java.sql.Blob" %>
+<%@page import = "java.io.OutputStream" %>
+<%@page import = "java.io.*" %>
 <!Doctype HTML>
 	<html>
 	<head>
@@ -270,29 +272,168 @@ table tr:nth-child(even){
 
 /* Profile Image Styling */
 .profile-img{
-	float: left;
-	width: 60px;
-	margin-top: 5px;
-	border-radius: 50px;
+	width: 110px;
+	height: 110px;
+	border-radius: 100px;
+	background: linear-gradient(red, yellow, lime, aqua, blue, magenta, red);
+	padding: 4.3px;
+	display: flex;
 }
+.profile-img img{
+	width: 100px;
+	height: 100px;
+	object-fit: cover;
+	/* border: 7px solid  rgba(14, 0, 56, 0.98); */
+	border-radius: 50px;
+		
+}
+
+.btnUpdate{
+	margin-left: 15px;
+	padding: 6px 30px 6px 30px;
+	border: 1px solid white;
+	border-radius: 10px;
+	background-color: transparent;
+	color: white;
+}
+.btnUpdate:hover{
+	background-color: green;
+	border: none;
+	color: white;
+	transition: 0.5s ease all;
+	box-shadow: 0px 25px 80px rgba(217, 254, 244, 0.8);
+}
+
+/* Alert css code */
+.alert {
+    padding: 10px;
+    background-color: green;
+    color: white;
+}
+
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+.closebtn:hover {
+    color: black;
+}
+.editpf{
+	display: flex;
+	color: white;
+	display: flex;
+	font-size: 20px;
+	padding: 10px;
+	 background: linear-gradient(orange, red, purple, blue);
+	border-radius: 40px;
+}
+.btnProfile{
+	background-color: transparent;
+	width: 0px;
+	height: 0px;
+	border: none;
+	border-radius: 100px;
+	display: flex;
+	position: absolute;
+	top: 75px;
+	left: 105px;
+	
+}
+
+
+
+/* Popup for user profile */
+      .popup {
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: none;
+        }
+        .popup-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888888;
+            width: 25%;
+            height: 25%;
+            font-weight: bolder;
+        }
+        .popup-content button {
+            display: block;
+            margin: 0 auto;
+        }
+        .show {
+            display: block;
+        }
+        h1 {
+            color: green;
+        }
+        .updateProfielbtn{
+        	position:absolute;
+			margin-top: 50px;
+			padding: 4px 30px 4px 30px;
+			border: 1px solid gray;
+			border-radius: 10px;
+			background-color: transparent;
+			color: gray;
+        }
+        .updateProfielbtn:hover{
+			background-color: green;
+			border: none;
+			color: white;
+			transition: 0.5s ease all;
+			box-shadow: 0px 25px 80px rgba(217, 254, 244, 0.8);
+		}
+
+		.closeBtn{
+			position:absolute;
+			left: 56%;
+			padding: 4px 30px 4px 30px;
+			border: 1px solid gray;
+			border-radius: 10px;
+			background-color: transparent;
+			color: gray;
+			
+		}
+     .closeBtn:hover{
+			background-color: green;
+			border: none;
+			color: white;
+			transition: 0.5s ease all;
+			box-shadow: 0px 25px 80px rgba(217, 254, 244, 0.8);
+		}
+
 </style>
-
-
+<!-- This is for success popup -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>  
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 
 
 	<body>
 		
-		<div id="mySidenav" class="sidenav">
-		<p class="logo"><span>L </span>M S</p>
+	  <div id="mySidenav" class="sidenav">
+	  <p class="logo"><span>L </span>M S</p>
 	  <a href="dashboard.jsp" class="icon-a"><i class="fa fa-dashboard icons"></i>   Dashboard</a>
 	  <a href="myLeads.jsp"class="icon-a"><i class="fa fa-users icons"></i>   My Leads</a>
+	  <a href="currentLead.jsp"class="icon-a"><i class="fa fa-user-plus icons"></i>   Current Leads</a>
 	  <a href="profile.jsp"class="icon-a"><i class="fa fa-user icons"></i>   Profile</a>
 	  <!-- <a href="#"class="icon-a"><i class="fa fa-shopping-bag icons"></i>  Task</a> -->
 	  <!-- <a href="#"class="icon-a"><i class="fa fa-users icons"></i>  About </a> -->
-	  <a href="help.jsp"class="icon-a"><i class="fa fa-list icons"></i>   Help</a>
+	  <a href="help.jsp"class="icon-a"><i class="fa fa-question-circle icons"></i>   Help</a>
 	  <form action = "logout">
-	  <a href="index.jsp"class="icon-a"><i class="fa fa-list-alt icons"></i>  Logout</a>
+	  <a href="index.jsp"class="icon-a"><i class="fa fa-sign-out icons"></i>  Logout</a>
 		</form>
 	</div>
 	<div id="main">
@@ -357,19 +498,82 @@ table tr:nth-child(even){
 		<br/>
 		
 		
-		<!-- Adding new leads form -->
+		<!-- User Profile -->
 		<div class="clearfix"></div>
 		<br/>
 		
 		<div class="col-12">
 			<div class="boxheading">
-				<p style = "margin-top: 20px;">My Profile</p>
-				<img src="image/profile image.png" class="profile-img" />	
+				
+				<div class="profile-img">
+					<img src="image/profile image.png"  />
+					<img src = '
+					<%
+						String imgLen = null;
+						String userEmail = session.getAttribute("email").toString();
+						Connection conn = DatabaseConnection.getConnection();
+						try{
+							PreparedStatement pstmt = conn.prepareStatement("select image from users where email = ?");			
+							pstmt.setString(1, userEmail);	
+							
+							ResultSet rst = pstmt.executeQuery();
+							while(rst.next()) {
+								/* imgLen = rst.getString(1);
+				                System.out.println(imgLen.length());
+				                int len = imgLen.length();
+				                byte[] rb = new byte[len];
+				                InputStream readImg = rst.getBinaryStream(1);
+				                int index = readImg.read(rb, 0, len);
+				                
+				                response.reset();
+				                response.setContentType("image/png");
+				                
+				                response.getOutputStream().write(rb, 0, len);
+				                
+				                response.getOutputStream().flush();  */
+							
+						}
+						
+						}catch(Exception e){
+							System.out.println(e);
+						}
+					%>'/>
+					<div class = "heading">
+						<p style = "margin-left: 10px;"><b>My Profile</b></p>
+					</div>		
+				</div>
+				
+				
+				<button type = "submit" id="myButton" class = "btnProfile"><i class="fa fa-camera icons editpf"></i></button>
+
+				<div id="myPopup" class="popup">
+					<div class="popup-content">
+						<h2 style="color: green;">Choose your profile picture</h2>
+						<hr style="height:2px;border-width:0;color:gray;background-color:gray"><br>
+						
+						<form action = "updateProfileImage" method = "post" enctype="multipart/form-data">
+							<label>Choose image</label>
+							<input type= "file" name = "pfImage"/><br><br>
+							<button type = "submit" class = "updateProfielbtn">Update</button>							
+						</form>
+						<button id="closePopup" class = "closeBtn">Close</button>
+					</div>
+				</div>
+
 				<hr style="height:2px;border-width:0;color:gray;background-color:gray">
-			
+				<% try{String success = session.getAttribute("msg").toString(); 
+					if(success!= null){
+						out.print("<div class='alert alert-success alert-dismissible fade show'>"+
+								  "<button type='button' class='close' data-dismiss='alert'>×</button>"+
+								  " <strong>Success!</strong> Data updated successfully </div>");
+					}
+					session.removeAttribute("msg");
+					}catch(Exception e)
+					{System.out.println(e);} 
+				%>
 		<div class="container-fluid">
 				<div class="form-group"> 	
-				<br><br>
+				<br>
 				
 				<% 
 						
@@ -380,8 +584,7 @@ table tr:nth-child(even){
 							String email =  session.getAttribute("email").toString(); 
 							
 							Connection connect1 = DatabaseConnection.getConnection();
-							
-							
+														
 							PreparedStatement pstmt = connect1.prepareStatement("select name, email, mobile from users where email = ?");			
 							pstmt.setString(1, email);			
 							ResultSet rst = pstmt.executeQuery();
@@ -410,6 +613,7 @@ table tr:nth-child(even){
 		</div>
 
 		</div>
+		<form action = "updateProfileForm.jsp" method = "post"><button type= "submit" value = "" class ="btnUpdate">Update Profile</button></form>
 		</div>
 		</div>
 		</div>
@@ -439,7 +643,26 @@ table tr:nth-child(even){
 	      $(".nav2").css('display','none');
 	 });
 	
-
+ /* Alert message code */
+ $(document).ready(function () {  
+            $(".close").click(function () {  
+                $("#myAlert").alert("close");  
+            });  
+        });
+ 
+ /* Popup for user profile */
+  myButton.addEventListener("click", function () {
+            myPopup.classList.add("show");
+        });
+        closePopup.addEventListener("click", function () {
+            myPopup.classList.remove("show");
+        });
+        window.addEventListener("click", function (event) {
+            if (event.target == myPopup) {
+                myPopup.classList.remove("show");
+            }
+        });
+ 
 	</script>
 
 	</body>

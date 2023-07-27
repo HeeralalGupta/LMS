@@ -1,21 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-     <%@page import="java.sql.DriverManager"%>
+    <%@page import="java.sql.DriverManager"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.Connection"%>
 <%@page import = "in.pandit.persistance.DatabaseConnection" %>
-
-<!Doctype HTML>
-	<html>
+<%@page import = "java.util.List" %>
+<%@page import = "java.util.ArrayList" %>
+    
+<html>
 	<head>
 		<title></title>
 		<link rel="stylesheet" href="css/style.css" type="text/css"/>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-		<!-- cdn for table with pagination -->
-		
-<style>
-body{
+		<style>
+		body{
 	margin:0px;
 	padding: 0px;
 	background-color:#1b203d;
@@ -86,7 +85,6 @@ body{
 	float: left;
 	width: 40px;
 	margin-top: 5px;
-	border-radius: 50px;
 }
 .profile p{
 	color: white;
@@ -230,11 +228,10 @@ td, th {
   font-weight: 700;
   font-size: 2em;
 }
-
 /* Css for add lead form */
 .boxheading{
 	width: 96%;
-	height: 570px;
+	height: 50px;
 	background-color: #272c4a;
 	margin-left: 10px;
 	padding:10px;
@@ -247,55 +244,28 @@ td, th {
     margin-top: 7px;
     display: inline-block;
 }
-/* Table Desing */
-
-
-table th , table td{
-    text-align: center;
-}
-
-table tr:nth-child(even){
-    background-color: #1b203d;
-}
-
-.pagination li:hover{
-    cursor: pointer;
-}
-		table tbody tr {
-			display: none;
-		}
-
-/* Profile Image Styling */
-.profile-img{
-	float: left;
-	width: 60px;
-	margin-top: 5px;
-	border-radius: 50px;
-}
-
-/* Css for from */
 .boxform{
 	width: 96%;
-	height: 550px;
+	height: 470px;
 	background-color: #272c4a;
 	margin-left: 10px;
 	padding:10px;
 }
-.getInTouch input{
+input{
 	border: none;
 	border-radius: 2px;
 	padding: 7px;
 	height: 30px;
-	width: 750px;
+	width: 250px;
 	font-size: 17px;
 	background-color: off-white;
 }
-textarea{
+select{
 	border: none;
 	border-radius: 2px;
 	padding: 7px;
-	height: 40px;
-	width: 750px;
+	height: 30px;
+	width: 250px;
 	font-size: 17px;
 	background-color: off-white;
 }
@@ -326,30 +296,20 @@ input[type=text]:focus {
 	transition: 0.5s ease;
 	background-color: rgba(7, 217, 0, 0.8);
 }
-.getInTouch label{
-	color: white;
-	font-size: 16px;
-}
-.getInTouch{
-	
-  	margin: auto;
-  	width: 50%;
-  	padding: 25px;
-  	margin-top: 20px;
-  	box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
-}
-label{
-	color: blue;
-}
 </style>
-
-
 </head>
 
-
-	<body>
-		
-		<div id="mySidenav" class="sidenav">
+<body>
+	<% 
+		if(session.getAttribute("email") == null)
+		{
+			response.sendRedirect("index.jsp");
+		}
+	%>
+	
+	
+	
+	<div id="mySidenav" class="sidenav">
 		<p class="logo"><span>L </span>M S</p>
 	  <a href="dashboard.jsp" class="icon-a"><i class="fa fa-dashboard icons"></i>   Dashboard</a>
 	  <a href="myLeads.jsp"class="icon-a"><i class="fa fa-users icons"></i>   My Leads</a>
@@ -366,8 +326,8 @@ label{
 
 		<div class="head">
 			<div class="col-div-6">
-	<span style="font-size:30px;cursor:pointer; color: white;" class="nav"  > Help</span>
-	<span style="font-size:30px;cursor:pointer; color: white;" class="nav2"  > Help</span>
+	<span style="font-size:30px;cursor:pointer; color: white;" class="nav"  > Update Current Lead</span>
+	<span style="font-size:30px;cursor:pointer; color: white;" class="nav2"  > Update Current Lead</span>
 	</div>
 		
 		<div class="col-div-6">
@@ -385,8 +345,7 @@ label{
 		
 		<div class="col-div-3">
 			<div class="box">
-				<p>
-					<%
+				<p> <%
 						Connection connect = DatabaseConnection.getConnection();
 						int count = 0;
 						PreparedStatement st = connect.prepareStatement("select max(id) as id from leads");
@@ -397,19 +356,19 @@ label{
 						}
 						out.print(count);
 					%> 
-				<br/><span>Total Leads</span></p>
+	<br/><span>Total Leads</span></p>
 				<i class="fa fa-users box-icon"></i>
 			</div>
 		</div>
 		<div class="col-div-3">
 			<div class="box">
-				<p>0<br/><span>New Leads</span></p>
+				<p>1<br/><span>New Leads</span></p>
 				<i class="fa fa-cart-plus box-icon"></i>
 			</div>
 		</div>
 		<div class="col-div-3">
 			<div class="box">
-				<p>0<br/><span>Social Media</span></p>
+				<p>2<br/><span>Social Media</span></p>
 				<i class="fa fa-globe box-icon"></i>
 			</div>
 		</div>
@@ -419,6 +378,7 @@ label{
 				<i class="fa fa-tasks box-icon"></i>
 			</div>
 		</div>
+		
 		
 		<div class="clearfix"></div>
 		<br/>
@@ -430,29 +390,161 @@ label{
 		
 		<div class="col-12">
 			<div class="boxheading">
-				<p style = "margin-top: 20px;">Get In Touch</p>
-				<i class="fa fa-address-book box-icon flaot-left"></i>	
-				<hr style="height:2px;border-width:0;color:gray;background-color:gray">
+				<p>Update Current Lead</p>
+				<%
+					
+				%>
+			</div>
+		</div>
+		<hr style="width:97%;text-align:left;margin-left:10px">
+		<div class="col-12">
+			<div class="boxform">
 			
-				<form action = "help" method = "post">
-					<div  class = "getInTouch">
-						<label>Name</label><br>
-						<input type = "text" name = "name" placeholder = "Your name"/><br><br>
-						<label>Email</label><br>
-						<input type = "email" name = "email" placeholder = "Your email"/><br><br>
-						<label>Mobile</label><br>
-						<input type = "tel" name = "mobile" placeholder = "Your mobile" maxlength = "10"/><br><br>
-						<label>Comments</label><br>
-						<textarea name = "comments" rows="5" cols="35" placeholder = "Comments"></textarea><br><br>
-						<button type = "submit" class = "btn">Send</button>
-					</div>
-				</form>		
+				
+				<% 
+						
+				String name = null;
+				String emailid = null;
+				String address = null;
+				String mobile = null;
+				String source = null;
+				String date = null;
+				String currentOwner = null;
+				String status = null;
+				String priority = null;
+				
+				String email = request.getParameter("update");
+				String updatedemail = email.substring(2, email.length()-1);
+				try{
+							
+							Connection connect1 = DatabaseConnection.getConnection();		
+							
+							PreparedStatement pstmt = connect1.prepareStatement("select name, email, address, mobile, source, date, currentowner, status, priority from leads where email = ?");			
+							pstmt.setString(1, updatedemail);			
+							ResultSet rst = pstmt.executeQuery();
+						
+					  while (rst.next()) {
+							name = rst.getString(1);
+							emailid = rst.getString(2);
+							address = rst.getString(3);
+							mobile = rst.getString(4);
+							source = rst.getString(5);
+							date = rst.getString(6);
+							currentOwner = rst.getString(7);
+							status = rst.getString(8);
+							priority = rst.getString(9);
+							
+						}
+						
+						session.setAttribute("name", name);
+						
+						}catch(Exception e){
+							System.out.println(e);
+						}
+					%>
+				
+				<form action = "updateCurrentLead" method = "post">
+					<table>
+						<tr>
+							<td>Name </td>
+							<td><input type = "text" name = "name" value = "<% out.print(name);%>"required/></td>
+							<td>Email </td>
+							<td><input type = "email" name = "email" value = "<% out.print(emailid);%>" readonly required/></td>
+						</tr>
+						<tr>
+							<td>Address </td>
+							<td><input type = "text" name = "address" value = "<% out.print(address);%>" required/></td>
+							<td>Mobile </td>
+							<td><input type = "tel" name = "mobile" maxlength= "10" value = "<% out.print(mobile);%>" required/></td>
+						</tr>
+						<tr>
+							<td>Source </td>
+							<td><input type = "text" name = "source" value = "<% out.print(source);%>" required/></td>
+							<td>Date </td>
+							<td><input type = "date" name = "date" value = "<% out.print(date);%>" required/></td>
+						</tr>
+						<tr>
+							<td>Owner Email</td>
+							
+							
+							<td>
+						
+								<input type = "email" name = "owner"  value = "<% 
+								
+								List<String> lst = new ArrayList<String>();
+								try{
+									String emails = session.getAttribute("email").toString();
+									PreparedStatement pstmt = connect.prepareStatement("select email from users where email = ?");			
+									pstmt.setString(1, emails);
+									ResultSet rst = pstmt.executeQuery();
+					
+									while(rst.next()) {
+										lst.add(rst.getString(1));
+									}
+									for(String x : lst){
+										out.print(x);											}
+									}catch(Exception e){
+										System.out.println(e);
+									}
+								
+								%>" readonly>
+						
+							</td>
+							<td>Current Owner </td>
+							<td>
+							<select name = "currentOwner" required>
+								<option selected disabled > <% out.print(currentOwner);%></option>
+								<%
+										List<String> lst1 = new ArrayList<String>();
+										try{
+											String email2 = session.getAttribute("email").toString();
+											PreparedStatement pstmt = connect.prepareStatement("select email from users");			
+														
+											ResultSet rst = pstmt.executeQuery();
+							
+											while(rst.next()) {
+												lst1.add(rst.getString(1));
+											}
+											for(String x : lst1){
+												out.print("<option>" + x + "</option>");											}
+											}catch(Exception e){
+												System.out.println(e);
+											}
+									%>
+							</select>
+							</td>
+						</tr>
+						<tr>
+							
+							<td>Status </td>
+							<td>
+							<select name = "status" required>
+								<option selected ><% out.print(status);%></option>
+								<option>New</option>
+								<option>Progress</option>
+								<option>Finished</option>
+							</select>
+							</td>
+							<td>Priority </td>
+							<td>
+							<select name = "priority" required>
+								<option selected ><% out.print(priority);%></option>
+								<option>Low</option>
+								<option>Medium</option>
+								<option>High</option>
+							</select>
+							</td>
+						</tr>
+						<tr>
+							<td><button type= "submit" class = "btn">Update</button></td>
+						</tr>		
+					</table>
+				</form>
+			</div>
 		</div>	
-		</div>
-		</div>
 		
-		
-	
+		</div>
+
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>
 
@@ -478,11 +570,10 @@ label{
 	     $(".nav").css('display','block');
 	      $(".nav2").css('display','none');
 	 });
-	
 
 	</script>
-
+	
 	</body>
 
-
-	</html>
+</body>
+</html>

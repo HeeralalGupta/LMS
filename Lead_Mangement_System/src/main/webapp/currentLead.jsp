@@ -321,7 +321,6 @@ table tr:nth-child(even){
     color: black;
 }
 </style>
-
 <!-- This is for popup message -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>  
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
@@ -347,8 +346,8 @@ table tr:nth-child(even){
 
 		<div class="head">
 			<div class="col-div-6">
-	<span style="font-size:30px;cursor:pointer; color: white;" class="nav"  > My Leads</span>
-	<span style="font-size:30px;cursor:pointer; color: white;" class="nav2"  > My Leads</span>
+	<span style="font-size:30px;cursor:pointer; color: white;" class="nav"  > Current Leads</span>
+	<span style="font-size:30px;cursor:pointer; color: white;" class="nav2"  > Current Leads</span>
 	</div>
 		
 		<div class="col-div-6">
@@ -428,11 +427,11 @@ table tr:nth-child(even){
 						</select>
 			 		
 			  	</div>
-				<% try{String success = session.getAttribute("msg").toString(); 
+					<% try{String success = session.getAttribute("msg").toString(); 
 					if(success!= null){
 						out.print("<div class='alert alert-danger alert-dismissible fade show'>"+
 									"<button type='button' class='close' data-dismiss='alert'>×</button>"+
-									" <strong>Danger!</strong> Data deleted successfully </div>");
+									" <strong>Success!</strong> Data deleted successfully </div>");
 					}
 					session.removeAttribute("msg");
 					}catch(Exception e)
@@ -456,7 +455,7 @@ table tr:nth-child(even){
 							<th>Email</th>
 							<th>Source</th>
 							<th>Date</th>
-							<th>Owner</th>
+							<th>Current Owner</th>
 							<th>Priority</th>
 							<th colspan="2">Action</th>
 						</tr>
@@ -465,18 +464,24 @@ table tr:nth-child(even){
   
   				<tbody>
   			<%
+  			 String name = null;
+  			 String email = null;
+  			 String source = null;
+  			 String date = null;
+  			 String currOwner = null;
+  			 String priority = null;
   			try{
   				Connection connect = DatabaseConnection.getConnection();
-  				String owner =  null;
+  				/* String profileName =  null; */
   				// Getting email from dashboard setAttribute
   				String email2 = session.getAttribute("email").toString(); 
   				// Getting name form user table
-  				PreparedStatement stmt = connect.prepareStatement("select name from users where email = ?");
+  				/* PreparedStatement stmt = connect.prepareStatement("select name from users where email = ?");
 				stmt.setString(1, email2);
 				ResultSet rs3 = stmt.executeQuery();
 				while (rs3.next()) {
-				owner = rs3.getString(1);
-				} 
+				profileName = rs3.getString(1);
+				} */
   				// This is for id counter
   				int count = 0;
 				PreparedStatement st = connect.prepareStatement("select max(id) as id from leads");
@@ -486,7 +491,7 @@ table tr:nth-child(even){
 				count = rs1.getInt("id");
 				}
 				
-  				PreparedStatement ps = connect.prepareStatement("select name, email, source, date, priority from leads where owner = ?");
+  				PreparedStatement ps = connect.prepareStatement("select name, email, source, date, currentowner, priority from leads where  currentowner= ?");
 				
 				 /* for (int a = 1; a <= count; a++) {  */
 							ps.setString(1, email2);		
@@ -494,11 +499,12 @@ table tr:nth-child(even){
 							ResultSet rs = ps.executeQuery();
 							while (rs.next()) {
 								
-								String name = rs.getString(1);
-								String email = rs.getString(2);
-								String source = rs.getString(3);
-								String date = rs.getString(4);
-								String priority = rs.getString(5);
+								name = rs.getString(1);
+								email = rs.getString(2);
+								source = rs.getString(3);
+								date = rs.getString(4);
+								currOwner = rs.getString(5);
+								priority = rs.getString(6);
 								
 												
 								out.print("<tr>");
@@ -507,7 +513,7 @@ table tr:nth-child(even){
 								out.print("<td>" + email + "</td>");
 								out.print("<td>" + source + "</td>");
 								out.print("<td>" + date + "</td>");
-								out.print("<td>" + owner + "</td>");
+								out.print("<td style = 'color: rgba(252, 0, 130, 1)'>" + currOwner + "</td>");
 								if (priority.equals("Low")){
 									
 									out.print("<td><center><div class = 'animated-progress progress-green'><span data-progress='33'></span>Low</div></div></center></td>");
@@ -521,8 +527,8 @@ table tr:nth-child(even){
 									out.print("<td><center><div class = 'animated-progress progress-purple'><span data-progress='66'></span>Medium</div></div></center></td>");
 								}
 								
-								out.print("<td><form action ='updateMyLead.jsp' method = 'post'><button type = 'submit' class = 'btn btn-primary'  name = 'update' value = '+ "+email+"+'>Update</button></form></td>");
-								out.print("<td><form action ='deleteMyLead' method = 'post'><button type = 'submit' class = 'btn btn-danger' name = 'delete' value = '+ "+email+"+' onclick='myFunction()'>Delete</button></form></td>");
+								out.print("<td><form action ='updateCurrentLead.jsp' method = 'post'><button type = 'submit' name = 'update' class = 'btn btn-primary' value = '+ "+email+"+'>Update</button></form></td>");
+								out.print("<td><form action ='deleteCurrentLead' method = 'post'><button type = 'submit' name = 'delete' class = 'btn btn-danger' value= '+ "+email+"+' onclick='myFunction()'>Delete</button></form></td>");
 				
 								out.print("</tr>");
 							
@@ -748,10 +754,10 @@ $(document).ready(function () {
            });  
        });
        
-/* Delete confirmation alert */
-function myFunction() {
-		confirm("Are you sure want to delete?");
-	}
+       /* Delete confirmation alert */
+       function myFunction() {
+  			confirm("Are you sure want to delete?");
+		}
 	</script>
 
 	</body>

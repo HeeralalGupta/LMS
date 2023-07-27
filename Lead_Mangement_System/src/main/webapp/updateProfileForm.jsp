@@ -5,6 +5,8 @@
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.Connection"%>
 <%@page import = "in.pandit.persistance.DatabaseConnection" %>
+<%@page import ="java.text.SimpleDateFormat"%>
+<%@page import = "java.util.Date"  %>
 
 <!Doctype HTML>
 	<html>
@@ -13,6 +15,7 @@
 		<link rel="stylesheet" href="css/style.css" type="text/css"/>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<!-- cdn for table with pagination -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 		
 <style>
 body{
@@ -234,7 +237,7 @@ td, th {
 /* Css for add lead form */
 .boxheading{
 	width: 96%;
-	height: 570px;
+	height: 550px;
 	background-color: #272c4a;
 	margin-left: 10px;
 	padding:10px;
@@ -273,33 +276,35 @@ table tr:nth-child(even){
 	border-radius: 50px;
 }
 
-/* Css for from */
-.boxform{
-	width: 96%;
-	height: 550px;
-	background-color: #272c4a;
-	margin-left: 10px;
-	padding:10px;
+.btnUpdate{
+	
+	padding: 5px 30px 5px 30px;
+	border: 1px solid white;
+	border-radius: 10px;
+	background-color: transparent;
+	color: white;
 }
-.getInTouch input{
+.btnUpdate:hover{
+	background-color: green;
 	border: none;
-	border-radius: 2px;
-	padding: 7px;
-	height: 30px;
-	width: 750px;
-	font-size: 17px;
-	background-color: off-white;
+	color: white;
+	transition: 0.5s ease all;
+	box-shadow: 0px 25px 80px rgba(217, 254, 244, 0.8);
 }
-textarea{
+label{
+	color: white;
+	font-size: 20px;
+}
+input{
 	border: none;
-	border-radius: 2px;
-	padding: 7px;
-	height: 40px;
-	width: 750px;
+	border-radius: 5px;
+	padding: 10px;
+	height: 35px;
+	width: 250px;
 	font-size: 17px;
-	background-color: off-white;
+	background-color: transparent;
+	color: white;
 }
-
 input[type=text] {
   margin: 8px 0;
   box-sizing: border-box;
@@ -311,35 +316,6 @@ input[type=text] {
 
 input[type=text]:focus {
   border: 2px solid green;
-}
-.btn{
-	width: 250px;
-	height: 35px;
-	background-color: rgba(12, 188, 6, 0.8);
-	font-size: 15px;
-	color: white;
-	border: none;
-	border-radius: 5px;
-}
-.btn:hover{
-	box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
-	transition: 0.5s ease;
-	background-color: rgba(7, 217, 0, 0.8);
-}
-.getInTouch label{
-	color: white;
-	font-size: 16px;
-}
-.getInTouch{
-	
-  	margin: auto;
-  	width: 50%;
-  	padding: 25px;
-  	margin-top: 20px;
-  	box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
-}
-label{
-	color: blue;
 }
 </style>
 
@@ -366,8 +342,8 @@ label{
 
 		<div class="head">
 			<div class="col-div-6">
-	<span style="font-size:30px;cursor:pointer; color: white;" class="nav"  > Help</span>
-	<span style="font-size:30px;cursor:pointer; color: white;" class="nav2"  > Help</span>
+	<span style="font-size:30px;cursor:pointer; color: white;" class="nav"  > My Profile</span>
+	<span style="font-size:30px;cursor:pointer; color: white;" class="nav2"  > My Profile</span>
 	</div>
 		
 		<div class="col-div-6">
@@ -430,29 +406,60 @@ label{
 		
 		<div class="col-12">
 			<div class="boxheading">
-				<p style = "margin-top: 20px;">Get In Touch</p>
-				<i class="fa fa-address-book box-icon flaot-left"></i>	
+				<p style = "margin-top: 20px;">Update Profile</p>
+				<img src="image/profile image.png" class="profile-img" />	
 				<hr style="height:2px;border-width:0;color:gray;background-color:gray">
 			
-				<form action = "help" method = "post">
-					<div  class = "getInTouch">
-						<label>Name</label><br>
-						<input type = "text" name = "name" placeholder = "Your name"/><br><br>
-						<label>Email</label><br>
-						<input type = "email" name = "email" placeholder = "Your email"/><br><br>
-						<label>Mobile</label><br>
-						<input type = "tel" name = "mobile" placeholder = "Your mobile" maxlength = "10"/><br><br>
-						<label>Comments</label><br>
-						<textarea name = "comments" rows="5" cols="35" placeholder = "Comments"></textarea><br><br>
-						<button type = "submit" class = "btn">Send</button>
-					</div>
-				</form>		
-		</div>	
+		<div class="container-fluid">
+				<div class="form-group"> 	
+				<br>
+				
+				<% 
+						
+				String name = null;
+				String emailid = null;
+				String mobile = null;
+				try{
+							String email =  session.getAttribute("email").toString(); 
+							
+							Connection connect1 = DatabaseConnection.getConnection();
+							
+							
+							PreparedStatement pstmt = connect1.prepareStatement("select name, email, mobile from users where email = ?");			
+							pstmt.setString(1, email);			
+							ResultSet rst = pstmt.executeQuery();
+						
+						while (rst.next()) {
+							name = rst.getString(1);
+							emailid = rst.getString(2);
+							mobile = rst.getString(3);
+						}
+						
+						session.setAttribute("name", name);
+						
+						}catch(Exception e){
+							System.out.println(e);
+						}
+					%>
+				
+				<form action = "updateUserProfile" method = "post">
+					<label>Name</label><br>
+					<input type = "text" name = "name" value = "<% out.print(name); %>" required/><br><br>
+					<label>Email</label><br>
+					<input type = "text" name = "email" value = "<% out.print(emailid); %>" readonly/><br><br>
+					<label>Mobile</label><br>
+					<input type = "text" name = "mobile" value = "<% out.print(mobile); %>" maxlength="10" required/><br><br>
+					<button type= "submit" class ="btnUpdate">Update</button>
+				</form>
+				
+			 
 		</div>
+
 		</div>
 		
-		
-	
+		</div>
+		</div>
+		</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>
 
