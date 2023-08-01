@@ -186,7 +186,7 @@ h2{
         </div>
         <div class="fotter">
           <a>Forgot Password ?</a>
-          <a href = "signup.jsp">SingUp</a>
+          <a href = "signup.jsp">SignUp</a>
         </div>
       </div>
       

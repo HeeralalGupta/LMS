@@ -10,6 +10,8 @@
 <%@page import = "java.sql.Blob" %>
 <%@page import = "java.io.OutputStream" %>
 <%@page import = "java.io.*" %>
+<%@page import = "java.text.SimpleDateFormat" %>
+<%@page import = "java.util.Date" %>
 <!Doctype HTML>
 	<html>
 	<head>
@@ -24,7 +26,7 @@ body{
 	margin:0px;
 	padding: 0px;
 	background-color:#1b203d;
-	overflow: hidden;
+	/* overflow: hidden; */
 	font-family: system-ui;
 }
 .clearfix{
@@ -65,7 +67,7 @@ body{
   background-color:#1b203d;
 }
 .sidenav{
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 25px;
   font-size: 36px;
@@ -91,13 +93,14 @@ body{
 	float: left;
 	width: 40px;
 	margin-top: 5px;
+	margin-left: -80px;
 	border-radius: 50px;
 }
 .profile p{
 	color: white;
 	font-weight: 500;
-	margin-left: 55px;
-	margin-top: 10px;
+	margin-left: -70px;
+	margin-top: 3px;
 	font-size: 13.5px;
 }
 .profile p span{
@@ -238,10 +241,9 @@ td, th {
 
 /* Css for add lead form */
 .boxheading{
-	width: 96%;
-	height: 550px;
+	width: 98%;
+	height: 600px;
 	background-color: #272c4a;
-	margin-left: 10px;
 	padding:10px;
 }
 .boxheading p{
@@ -414,6 +416,23 @@ table tr:nth-child(even){
 			box-shadow: 0px 25px 80px rgba(217, 254, 244, 0.8);
 		}
 
+.logBtn{
+	width: 100%;
+	height: 40px;
+	background-color: transparent;
+	color: gray;
+	border: none;
+	font-size: 20px;
+	color: #818181;
+  	display: block;
+  	transition: 0.3s;
+  	text-align: left;
+  	margin-left: -5px;
+}
+.logBtn:hover {
+  color: #f1f1f1;
+  background-color:#1b203d;
+}
 </style>
 <!-- This is for success popup -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>  
@@ -423,18 +442,33 @@ table tr:nth-child(even){
 
 	<body>
 		
+		<% 
+		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+		if(session.getAttribute("email") == null)
+		{
+			out.println("<script type=\"text/javascript\">");
+			out.println("alert('You are no longer logged in');");
+			out.println("</script>");
+			response.sendRedirect("index.jsp");
+		}
+	%>
+		
 	  <div id="mySidenav" class="sidenav">
 	  <p class="logo"><span>L </span>M S</p>
 	  <a href="dashboard.jsp" class="icon-a"><i class="fa fa-dashboard icons"></i>   Dashboard</a>
 	  <a href="myLeads.jsp"class="icon-a"><i class="fa fa-users icons"></i>   My Leads</a>
 	  <a href="currentLead.jsp"class="icon-a"><i class="fa fa-user-plus icons"></i>   Current Leads</a>
 	  <a href="profile.jsp"class="icon-a"><i class="fa fa-user icons"></i>   Profile</a>
-	  <!-- <a href="#"class="icon-a"><i class="fa fa-shopping-bag icons"></i>  Task</a> -->
-	  <!-- <a href="#"class="icon-a"><i class="fa fa-users icons"></i>  About </a> -->
 	  <a href="help.jsp"class="icon-a"><i class="fa fa-question-circle icons"></i>   Help</a>
-	  <form action = "logout">
-	  <a href="index.jsp"class="icon-a"><i class="fa fa-sign-out icons"></i>  Logout</a>
-		</form>
+	  <form action = "logout" method = "post"><a href="#"class="icon-a"><button type = "submit" class = "logBtn"><i class="fa fa-sign-out icons"></i> Logout</button></a></form> 
+		 <div class = "timeDate">
+	  	<p style = "margin-top: 375px; margin-left: 5px; font-size: 18px; color: gray;">Date and Time</p>
+	  	<%
+	  		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+			Date date = new Date();
+	    	out.println("<p style = 'margin-top: -20px; margin-left: 5px; font-size: 16px; color: lightgray;''>"+formatter.format(date)+"</p>");
+	  	%>
+	  </div>
 	</div>
 	<div id="main">
 
@@ -448,7 +482,27 @@ table tr:nth-child(even){
 		<div class="profile">
 
 			<img src="image/xyz.jfif" class="pro-img" />
-			<p style="font-size:20px;">PanditSoft <span  style="font-size:12px;">Web Development</span></p>
+			<%
+			String namedb = null;
+			String emaildb = null;
+			try{
+				Connection connect = DatabaseConnection.getConnection();
+				String email = session.getAttribute("email").toString();
+				PreparedStatement pstmt = connect.prepareStatement("select name, email from users where email = ?");			
+				pstmt.setString(1, email);
+				ResultSet rst = pstmt.executeQuery();
+
+				while(rst.next()) {
+					namedb = rst.getString(1);
+					emaildb = rst.getString(2);
+				}
+				%>
+					<p style="font-size:20px; text-align: center;"><% out.print(namedb); %> <span  style="font-size:12px; text-align: center;"><% out.print(emaildb); %></span></p>
+				<%									
+				}catch(Exception e){
+					System.out.println(e);
+				}
+			%>
 		</div>
 	</div>
 		<div class="clearfix"></div>
@@ -507,9 +561,11 @@ table tr:nth-child(even){
 				
 				<div class="profile-img">
 					<img src="image/profile image.png"  />
-					<img src = '
-					<%
+					
+					<%-- <%
 						String imgLen = null;
+						byte[] rb = null;
+						int len = 0;
 						String userEmail = session.getAttribute("email").toString();
 						Connection conn = DatabaseConnection.getConnection();
 						try{
@@ -518,26 +574,26 @@ table tr:nth-child(even){
 							
 							ResultSet rst = pstmt.executeQuery();
 							while(rst.next()) {
-								/* imgLen = rst.getString(1);
+								imgLen = rst.getString(1);
 				                System.out.println(imgLen.length());
-				                int len = imgLen.length();
-				                byte[] rb = new byte[len];
+				                len = imgLen.length();
+				                rb = new byte[len];
 				                InputStream readImg = rst.getBinaryStream(1);
 				                int index = readImg.read(rb, 0, len);
 				                
 				                response.reset();
 				                response.setContentType("image/png");
-				                
-				                response.getOutputStream().write(rb, 0, len);
-				                
-				                response.getOutputStream().flush();  */
+								}
+				                %>
+				                	<img src="<% response.getOutputStream().write(rb, 0, len); %>" width= "20" height = "20" />
+				                <%
+				                response.getOutputStream().flush();
 							
-						}
 						
 						}catch(Exception e){
 							System.out.println(e);
 						}
-					%>'/>
+					%> --%>
 					<div class = "heading">
 						<p style = "margin-left: 10px;"><b>My Profile</b></p>
 					</div>		
@@ -563,11 +619,21 @@ table tr:nth-child(even){
 				<hr style="height:2px;border-width:0;color:gray;background-color:gray">
 				<% try{String success = session.getAttribute("msg").toString(); 
 					if(success!= null){
-						out.print("<div class='alert alert-success alert-dismissible fade show'>"+
-								  "<button type='button' class='close' data-dismiss='alert'>×</button>"+
-								  " <strong>Success!</strong> Data updated successfully </div>");
+						out.print("<div class='alert alert-danger alert-dismissible fade show alert1'>"+
+									"<button type='button' class='close' data-dismiss='alert'>×</button>"+
+									" <strong>Success!</strong> Data updated successfully </div>");
 					}
 					session.removeAttribute("msg");
+					}catch(Exception e)
+					{System.out.println(e);} 
+				%>
+				<% try{String success = session.getAttribute("imgStatus").toString(); 
+					if(success!= null){
+						out.print("<div class='alert alert-danger alert-dismissible fade show alert1'>"+
+									"<button type='button' class='close' data-dismiss='alert'>×</button>"+
+									" <strong>Success!</strong> Image updated successfully </div>");
+					}
+					session.removeAttribute("imgStatus");
 					}catch(Exception e)
 					{System.out.println(e);} 
 				%>
@@ -616,6 +682,8 @@ table tr:nth-child(even){
 		<form action = "updateProfileForm.jsp" method = "post"><button type= "submit" value = "" class ="btnUpdate">Update Profile</button></form>
 		</div>
 		</div>
+		
+		<br><br><br>	
 		</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>

@@ -7,18 +7,20 @@
 <%@page import = "in.pandit.persistance.DatabaseConnection" %>
 <%@page import = "java.util.List" %>
 <%@page import = "java.util.ArrayList" %>
+<%@page import = "java.text.SimpleDateFormat" %>
+<%@page import = "java.util.Date" %>
     
 <html>
 	<head>
 		<title></title>
 		<link rel="stylesheet" href="css/style.css" type="text/css"/>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-		<style>
-		body{
+<style>
+body{
 	margin:0px;
 	padding: 0px;
 	background-color:#1b203d;
-	overflow: hidden;
+	/* overflow: hidden; */
 	font-family: system-ui;
 }
 .clearfix{
@@ -59,7 +61,7 @@
   background-color:#1b203d;
 }
 .sidenav{
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 25px;
   font-size: 36px;
@@ -85,12 +87,13 @@
 	float: left;
 	width: 40px;
 	margin-top: 5px;
+	margin-left: -80px;
 }
 .profile p{
 	color: white;
 	font-weight: 500;
-	margin-left: 55px;
-	margin-top: 10px;
+	margin-left: -70px;
+	margin-top: 4px;
 	font-size: 13.5px;
 }
 .profile p span{
@@ -296,13 +299,34 @@ input[type=text]:focus {
 	transition: 0.5s ease;
 	background-color: rgba(7, 217, 0, 0.8);
 }
+.logBtn{
+	width: 100%;
+	height: 40px;
+	background-color: transparent;
+	color: gray;
+	border: none;
+	font-size: 20px;
+	color: #818181;
+  	display: block;
+  	transition: 0.3s;
+  	text-align: left;
+  	margin-left: -5px;
+}
+.logBtn:hover {
+  color: #f1f1f1;
+  background-color:#1b203d;
+}
 </style>
 </head>
 
 <body>
 	<% 
+		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		if(session.getAttribute("email") == null)
 		{
+			out.println("<script type=\"text/javascript\">");
+			out.println("alert('You are no longer logged in');");
+			out.println("</script>");
 			response.sendRedirect("index.jsp");
 		}
 	%>
@@ -315,12 +339,16 @@ input[type=text]:focus {
 	  <a href="myLeads.jsp"class="icon-a"><i class="fa fa-users icons"></i>   My Leads</a>
 	  <a href="currentLead.jsp"class="icon-a"><i class="fa fa-user-plus icons"></i>   Current Leads</a>
 	  <a href="profile.jsp"class="icon-a"><i class="fa fa-user icons"></i>   Profile</a>
-	  <!-- <a href="#"class="icon-a"><i class="fa fa-shopping-bag icons"></i>  Task</a> -->
-	  <!-- <a href="#"class="icon-a"><i class="fa fa-users icons"></i>  About </a> -->
 	  <a href="help.jsp"class="icon-a"><i class="fa fa-question-circle icons"></i>   Help</a>
-	  <form action = "logout">
-	  <a href="index.jsp"class="icon-a"><i class="fa fa-sign-out icons"></i>  Logout</a>
-		</form>
+	  <form action = "logout" method = "post"><a href="#"class="icon-a"><button type = "submit" class = "logBtn"><i class="fa fa-sign-out icons"></i> Logout</button></a></form> 
+	<div class = "timeDate">
+	  	<p style = "margin-top: 390px; margin-left: 5px; font-size: 18px; color: gray;">Date and Time</p>
+	  	<%
+	  		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+			Date date = new Date();
+	    	out.println("<p style = 'margin-top: -20px; margin-left: 5px; font-size: 16px; color: lightgray;''>"+formatter.format(date)+"</p>");
+	  	%>
+	  </div>
 	</div>
 	<div id="main">
 
@@ -334,7 +362,27 @@ input[type=text]:focus {
 		<div class="profile">
 
 			<img src="image/xyz.jfif" class="pro-img" />
-			<p style="font-size:20px;">PanditSoft <span  style="font-size:12px;">Web Development</span></p>
+			<%
+			String namedb = null;
+			String emaildb = null;
+			try{
+				Connection connect = DatabaseConnection.getConnection();
+				String email = session.getAttribute("email").toString();
+				PreparedStatement pstmt = connect.prepareStatement("select name, email from users where email = ?");			
+				pstmt.setString(1, email);
+				ResultSet rst = pstmt.executeQuery();
+
+				while(rst.next()) {
+					namedb = rst.getString(1);
+					emaildb = rst.getString(2);
+				}
+				%>
+					<p style="font-size:20px; text-align: center;"><% out.print(namedb); %> <span  style="font-size:12px; text-align: center;"><% out.print(emaildb); %></span></p>
+				<%									
+				}catch(Exception e){
+					System.out.println(e);
+				}
+			%>
 		</div>
 	</div>
 		<div class="clearfix"></div>
@@ -408,7 +456,7 @@ input[type=text]:focus {
 				String address = null;
 				String mobile = null;
 				String source = null;
-				String date = null;
+				String dates = null;
 				String currentOwner = null;
 				String status = null;
 				String priority = null;
@@ -429,7 +477,7 @@ input[type=text]:focus {
 							address = rst.getString(3);
 							mobile = rst.getString(4);
 							source = rst.getString(5);
-							date = rst.getString(6);
+							dates = rst.getString(6);
 							currentOwner = rst.getString(7);
 							status = rst.getString(8);
 							priority = rst.getString(9);
@@ -461,7 +509,7 @@ input[type=text]:focus {
 							<td>Source </td>
 							<td><input type = "text" name = "source" value = "<% out.print(source);%>" required/></td>
 							<td>Date </td>
-							<td><input type = "date" name = "date" value = "<% out.print(date);%>" required/></td>
+							<td><input type = "date" name = "date" value = "<% out.print(dates);%>" required/></td>
 						</tr>
 						<tr>
 							<td>Owner Email</td>

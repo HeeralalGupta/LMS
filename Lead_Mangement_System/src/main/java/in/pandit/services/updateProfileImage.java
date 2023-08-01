@@ -2,7 +2,6 @@ package in.pandit.services;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
@@ -23,7 +22,7 @@ public class updateProfileImage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		PrintWriter pw = response.getWriter();
+		
 		InputStream inputStream = null;
 		Part image = request.getPart("pfImage");
 		
@@ -41,7 +40,9 @@ public class updateProfileImage extends HttpServlet {
             
             int status = stmt.executeUpdate();
             if(status > 0) {
-            	System.out.println("Image updated successfully");
+            	
+            	HttpSession imgStatus = request.getSession();
+            	imgStatus.setAttribute("imgStatus", "Updated Profile");
             	response.sendRedirect("profile.jsp");
             }
             else {

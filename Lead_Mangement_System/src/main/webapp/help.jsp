@@ -5,6 +5,8 @@
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.Connection"%>
 <%@page import = "in.pandit.persistance.DatabaseConnection" %>
+<%@page import = "java.text.SimpleDateFormat" %>
+<%@page import = "java.util.Date" %>
 
 <!Doctype HTML>
 	<html>
@@ -19,7 +21,7 @@ body{
 	margin:0px;
 	padding: 0px;
 	background-color:#1b203d;
-	overflow: hidden;
+	/* overflow: hidden; */
 	font-family: system-ui;
 }
 .clearfix{
@@ -60,7 +62,7 @@ body{
   background-color:#1b203d;
 }
 .sidenav{
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 25px;
   font-size: 36px;
@@ -86,13 +88,14 @@ body{
 	float: left;
 	width: 40px;
 	margin-top: 5px;
+	margin-left: -80px;
 	border-radius: 50px;
 }
 .profile p{
 	color: white;
 	font-weight: 500;
-	margin-left: 55px;
-	margin-top: 10px;
+	margin-left: -70px;
+	margin-top: 4px;
 	font-size: 13.5px;
 }
 .profile p span{
@@ -341,6 +344,23 @@ input[type=text]:focus {
 label{
 	color: blue;
 }
+.logBtn{
+	width: 100%;
+	height: 40px;
+	background-color: transparent;
+	color: gray;
+	border: none;
+	font-size: 20px;
+	color: #818181;
+  	display: block;
+  	transition: 0.3s;
+  	text-align: left;
+  	margin-left: -5px;
+}
+.logBtn:hover {
+  color: #f1f1f1;
+  background-color:#1b203d;
+}
 </style>
 
 
@@ -348,6 +368,16 @@ label{
 
 
 	<body>
+		<% 
+		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+		if(session.getAttribute("email") == null)
+		{
+			out.println("<script type=\"text/javascript\">");
+			out.println("alert('You are no longer logged in');");
+			out.println("</script>");
+			response.sendRedirect("index.jsp");
+		}
+	%>
 		
 		<div id="mySidenav" class="sidenav">
 		<p class="logo"><span>L </span>M S</p>
@@ -355,12 +385,17 @@ label{
 	  <a href="myLeads.jsp"class="icon-a"><i class="fa fa-users icons"></i>   My Leads</a>
 	  <a href="currentLead.jsp"class="icon-a"><i class="fa fa-user-plus icons"></i>   Current Leads</a>
 	  <a href="profile.jsp"class="icon-a"><i class="fa fa-user icons"></i>   Profile</a>
-	  <!-- <a href="#"class="icon-a"><i class="fa fa-shopping-bag icons"></i>  Task</a> -->
-	  <!-- <a href="#"class="icon-a"><i class="fa fa-users icons"></i>  About </a> -->
 	  <a href="help.jsp"class="icon-a"><i class="fa fa-question-circle icons"></i>   Help</a>
-	  <form action = "logout">
-	  <a href="index.jsp"class="icon-a"><i class="fa fa-sign-out icons"></i>  Logout</a>
-		</form>
+	  
+	  <form action = "logout" method = "post"><a href="#"class="icon-a"><button type = "submit" class = "logBtn"><i class="fa fa-sign-out icons"></i> Logout</button></a></form> 
+		 <div class = "timeDate">
+	  	<p style = "margin-top: 390px; margin-left: 5px; font-size: 18px; color: gray;">Date and Time</p>
+	  	<%
+	  		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
+			Date date = new Date();
+	    	out.println("<p style = 'margin-top: -20px; margin-left: 5px; font-size: 16px; color: lightgray;''>"+formatter.format(date)+"</p>");
+	  	%>
+	  </div>
 	</div>
 	<div id="main">
 
@@ -374,7 +409,27 @@ label{
 		<div class="profile">
 
 			<img src="image/xyz.jfif" class="pro-img" />
-			<p style="font-size:20px;">PanditSoft <span  style="font-size:12px;">Web Development</span></p>
+			<%
+			String namedb = null;
+			String emaildb = null;
+			try{
+				Connection connect = DatabaseConnection.getConnection();
+				String email = session.getAttribute("email").toString();
+				PreparedStatement pstmt = connect.prepareStatement("select name, email from users where email = ?");			
+				pstmt.setString(1, email);
+				ResultSet rst = pstmt.executeQuery();
+
+				while(rst.next()) {
+					namedb = rst.getString(1);
+					emaildb = rst.getString(2);
+				}
+				%>
+					<p style="font-size:20px; text-align: center;"><% out.print(namedb); %> <span  style="font-size:12px; text-align: center;"><% out.print(emaildb); %></span></p>
+				<%									
+				}catch(Exception e){
+					System.out.println(e);
+				}
+			%>
 		</div>
 	</div>
 		<div class="clearfix"></div>
@@ -449,6 +504,9 @@ label{
 				</form>		
 		</div>	
 		</div>
+		
+		
+		<br><br><br>
 		</div>
 		
 		
