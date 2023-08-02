@@ -151,8 +151,27 @@ h2{
 
 }
 </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>  
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script> 
+
+<!-- This cdn is for sweet alert -->
+<script src=
+"https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js">
+  </script>
+  
+  <script src="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.css">
 </head>
+
 <body>
+
+	<%
+	if (request.getAttribute("success") != null) {
+		out.print("<script>swal('Congrates!', 'Password reset successfully', 'success')</script>");
+	}
+	%>
+
 	<form action = "login" method = "post">
     <div class="login_form_container">
       <div class="login_form">
@@ -185,7 +204,7 @@ h2{
           <button type = "submit">Login</button>
         </div>
         <div class="fotter">
-          <a>Forgot Password ?</a>
+          <a href = "forgotPassword.jsp">Forgot Password ?</a>
           <a href = "signup.jsp">SignUp</a>
         </div>
       </div>

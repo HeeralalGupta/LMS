@@ -321,6 +321,13 @@ input[type=text]:focus {
 }
 
 </style>
+<!-- This cdn is for sweet alert -->
+<script src=
+"https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js">
+  </script>
+  
+  <script src="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.css">
 </head>
 
 <body>
@@ -335,7 +342,11 @@ input[type=text]:focus {
 		}
 	%>
 	
-	
+	<%
+	if (request.getAttribute("messages") != null) {
+		out.print("<script>swal('Thank You!', 'We will get in touch soon!', 'success')</script>");
+	}
+	%>
 	
 	<div id="mySidenav" class="sidenav">
 		<p class="logo"><span>L </span>M S</p>

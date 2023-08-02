@@ -2,6 +2,7 @@ package in.pandit.services;
 
 import java.io.IOException;
 import java.util.Properties;
+import java.util.Random;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -17,24 +18,26 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 
-@WebServlet("/help")
-public class help extends HttpServlet {
+@WebServlet("/forgotPassword")
+public class forgotPassword extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-
+   
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher dispatcher = null;
-		String name = request.getParameter("name");
 		String email = request.getParameter("email");
-		String mobile = request.getParameter("mobile");
-		String comments = request.getParameter("comments");
+		RequestDispatcher dispatcher = null;
+		int otpvalue = 0;
+		HttpSession mySession = request.getSession();
 		
 		if(email!=null || !email.equals("")) {
-			
+			// sending otp
+			Random rand = new Random();
+			otpvalue = rand.nextInt(1255650);
 
-			String to = "heeralalgupta825313@gmail.com";// change accordingly
+			String to = email;// change accordingly
 			// Get the session object
 			Properties props = new Properties();
 			props.put("mail.smtp.host", "smtp.gmail.com");
@@ -54,11 +57,8 @@ public class help extends HttpServlet {
 				MimeMessage message = new MimeMessage(session);
 				message.setFrom(new InternetAddress(email));// change accordingly
 				message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-				message.setSubject("Mail from Lead Management System");
-				message.setText("Name  : " + name);
-				message.setText("Email  : " + email);
-				message.setText("Mobile  : " + mobile);
-				message.setText("Comments  : " + comments);
+				message.setSubject("Reset Password");
+				message.setText("Your OTP is: " + otpvalue);
 				// send message
 				Transport.send(message);
 				System.out.println("Message sent successfully");
@@ -67,13 +67,16 @@ public class help extends HttpServlet {
 			catch (MessagingException e) {
 				throw new RuntimeException(e);
 			}
-			dispatcher = request.getRequestDispatcher("dashboard.jsp");
-			request.setAttribute("messages","Data sent successfully");
+			dispatcher = request.getRequestDispatcher("EnterOtp.jsp");
+			request.setAttribute("messages","OTP is sent to your email id");
 			//request.setAttribute("connection", con);
+			mySession.setAttribute("otp",otpvalue); 
+			mySession.setAttribute("email",email); 
 			dispatcher.forward(request, response);
 			//request.setAttribute("status", "success");
 		}
-	
+		
 	}
-
 }
+
+

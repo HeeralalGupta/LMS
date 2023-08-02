@@ -511,7 +511,7 @@ table tr:nth-child(even){
 							<th>Date</th>
 							<th>Current Owner</th>
 							<th>Priority</th>
-							<th colspan="2">Action</th>
+							<th>Action</th>
 						</tr>
     
   					</thead>
@@ -582,7 +582,7 @@ table tr:nth-child(even){
 								}
 								
 								out.print("<td><form action ='updateCurrentLead.jsp' method = 'post'><button type = 'submit' name = 'update' class = 'btn btn-primary' value = '+ "+email+"+'>Update</button></form></td>");
-								out.print("<td><form action ='deleteCurrentLead' method = 'post'><button type = 'submit' name = 'delete' class = 'btn btn-danger' value= '+ "+email+"+' onclick='myFunction()'>Delete</button></form></td>");
+								/* out.print("<td><form action ='deleteCurrentLead' method = 'post'><button type = 'submit' name = 'delete' class = 'btn btn-danger' value= '+ "+email+"+' onclick='myFunction()'>Delete</button></form></td>"); */
 				
 								out.print("</tr>");
 							

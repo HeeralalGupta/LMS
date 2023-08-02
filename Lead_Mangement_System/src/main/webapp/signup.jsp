@@ -154,13 +154,28 @@ h2{
 
 }
 </style>
+
+<!-- This cdn is for sweet alert -->
+<script src=
+"https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js">
+  </script>
+  
+  <script src="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.css">
 </head>
 <body>
+
+	<%
+	if (request.getAttribute("failed") != null) {
+		out.print("<script>sweetAlert('Oops...', 'Its look like you are not a valid users!', 'error');</script>");
+	}
+	%>
+
 	<form action = "RegisterUsers" method = "post">
     <div class="login_form_container">
       <div class="login_form">
         <h2>Sign Up</h2>
-        
+       
         <div class="input_group">
           <i class="fa fa-user"></i>
           <input
