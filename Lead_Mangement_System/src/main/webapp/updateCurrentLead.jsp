@@ -394,15 +394,15 @@ input[type=text]:focus {
 		<div class="col-div-3">
 			<div class="box">
 				<p> <%
-						Connection connect = DatabaseConnection.getConnection();
-						int count = 0;
-						PreparedStatement st = connect.prepareStatement("select max(id) as id from leads");
+				Connection connect = DatabaseConnection.getConnection();
+				int c = 0;
+				PreparedStatement stt = connect.prepareStatement("SELECT COUNT(id) from leads");
 
-						ResultSet rs = st.executeQuery();
-						while (rs.next()) {
-						count = rs.getInt("id");
-						}
-						out.print(count);
+				ResultSet rset = stt.executeQuery();
+				if (rset.next()) {
+				c = rset.getInt(1);
+				}
+				out.print(c);
 					%> 
 	<br/><span>Total Leads</span></p>
 				<i class="fa fa-users box-icon"></i>

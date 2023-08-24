@@ -10,7 +10,7 @@
 <!Doctype HTML>
 	<html>
 	<head>
-		<title></title>
+		<title>All Users</title>
 		<link rel="stylesheet" href="css/style.css" type="text/css"/>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<!-- cdn for table with pagination -->
@@ -362,11 +362,11 @@ table tr:nth-child(even){
 		
 		<div id="mySidenav" class="sidenav">
 		<p class="logo"><span>L </span>M S</p>
-	  <a href="dashboard.jsp" class="icon-a"><i class="fa fa-dashboard icons"></i>   Dashboard</a>
-	  <a href="myLeads.jsp"class="icon-a"><i class="fa fa-users icons"></i>   My Leads</a>
-	  <a href="currentLead.jsp"class="icon-a"><i class="fa fa-user-plus icons"></i>   Current Leads</a>
-	  <a href="profile.jsp"class="icon-a"><i class="fa fa-user icons"></i>   Profile</a>
-	  <a href="help.jsp"class="icon-a"><i class="fa fa-question-circle icons"></i>   Help</a>
+	  <a href="admin.jsp" class="icon-a"><i class="fa fa-dashboard icons"></i>   Dashboard</a>
+	  <a href="allLeads.jsp"class="icon-a"><i class="fa fa-line-chart icons"></i>   All Leads</a>
+	  <a href="allUsers.jsp"class="icon-a"><i class="fa fa-user-plus icons"></i>   All Users</a>
+	  <a href="adminProfile.jsp"class="icon-a"><i class="fa fa-user-circle icons"></i>   Profile</a>
+	  <a href="adminHelp.jsp"class="icon-a"><i class="fa fa-question-circle icons"></i>   Help</a>
 	 
 	  <form action = "logout" method = "post"><a href="#"class="icon-a"><button type = "submit" class = "logBtn"><i class="fa fa-sign-out icons"></i> Logout</button></a></form> 
 		 <div class = "timeDate">
@@ -382,8 +382,8 @@ table tr:nth-child(even){
 
 		<div class="head">
 			<div class="col-div-6">
-	<span style="font-size:30px;cursor:pointer; color: white;" class="nav"  > My Leads</span>
-	<span style="font-size:30px;cursor:pointer; color: white;" class="nav2"  > My Leads</span>
+	<span style="font-size:30px;cursor:pointer; color: white;" class="nav"  > All Users</span>
+	<span style="font-size:30px;cursor:pointer; color: white;" class="nav2"  > All Users</span>
 	</div>
 		
 		<div class="col-div-6">
@@ -434,25 +434,62 @@ table tr:nth-child(even){
 					out.print(c);
 					%> 
 				<br/><span>Total Leads</span></p>
+				<i class="fa fa-line-chart box-icon"></i>
+			</div>
+		</div>
+		<div class="col-div-3">
+			<div class="box">
+				<p>
+					<%
+				
+				int d = 0;
+				PreparedStatement stmtt = conn.prepareStatement("SELECT COUNT(id) from users where isadmin = ? and issuperadmin = ?");
+				stmtt.setString(1, "false");
+				stmtt.setString(2, "false");
+				ResultSet rsett = stmtt.executeQuery();
+				if (rsett.next()) {
+				d = rsett.getInt(1);
+				}
+				out.print(d);
+					%>
+				<br/><span>All Users</span></p>
 				<i class="fa fa-users box-icon"></i>
 			</div>
 		</div>
 		<div class="col-div-3">
 			<div class="box">
-				<p>0<br/><span>New Leads</span></p>
-				<i class="fa fa-cart-plus box-icon"></i>
+				<p>
+					<%
+				
+				int f = 0;
+				PreparedStatement stm = conn.prepareStatement("SELECT COUNT(source) from leads where source = ?");
+				stm.setString(1, "facebook");
+				ResultSet rstt = stm.executeQuery();
+				if (rstt.next()) {
+				f = rstt.getInt(1);
+				}
+				out.print(f);
+					%>
+				
+				<br/><span>Facebook Leads</span></p>
+				<i class="fa fa-facebook-square box-icon"></i>
 			</div>
 		</div>
 		<div class="col-div-3">
 			<div class="box">
-				<p>0<br/><span>Social Media</span></p>
-				<i class="fa fa-globe box-icon"></i>
-			</div>
-		</div>
-		<div class="col-div-3">
-			<div class="box">
-				<p>0<br/><span>Enrolled</span></p>
-				<i class="fa fa-tasks box-icon"></i>
+				<p>
+					<%
+					int g = 0;
+				PreparedStatement stmts = conn.prepareStatement("SELECT COUNT(source) from leads where source = ?");
+				stmts.setString(1, "google");
+				ResultSet rtt = stmts.executeQuery();
+				if (rtt.next()) {
+				g = rtt.getInt(1);
+				}
+				out.print(g);
+					%>
+				<br/><span>Google Leads</span></p>
+				<i class="fa fa-google-plus box-icon"></i>
 			</div>
 		</div>
 		
@@ -466,7 +503,7 @@ table tr:nth-child(even){
 		
 		<div class="col-12">
 			<div class="boxheading">
-				<p>All Leads</p>
+				<p>Users</p>
 				
 
 		<div class="container-fluid">
@@ -509,11 +546,8 @@ table tr:nth-child(even){
 						<tr>
 							<th>Name</th>
 							<th>Email</th>
-							<th>Source</th>
-							<th>Date</th>
-							<th>Owner</th>
-							<th>Priority</th>
-							<th colspan="2">Action</th>
+							<th>Mobile</th>
+							<th>Action</th>
 						</tr>
     
   					</thead>
@@ -541,43 +575,26 @@ table tr:nth-child(even){
 				count = rs1.getInt("id");
 				}
 				
-  				PreparedStatement ps = connect.prepareStatement("select name, email, source, date, priority from leads where owner = ?");
+  				PreparedStatement ps = connect.prepareStatement("select name, email, mobile from users where isadmin = ? and issuperadmin = ?");
 				
 				 /* for (int a = 1; a <= count; a++) {  */
-							ps.setString(1, email2);		
-					 
+									
+					 		ps.setString(1, "false");
+					 		ps.setString(2, "false");
 							ResultSet rs = ps.executeQuery();
 							while (rs.next()) {
 								
 								String name = rs.getString(1);
 								String email = rs.getString(2);
-								String source = rs.getString(3);
-								String dates = rs.getString(4);
-								String priority = rs.getString(5);
-								
+								String mobile = rs.getString(3);
 												
 								out.print("<tr>");
 				
 								out.print("<td>" + name + "</td>");
 								out.print("<td>" + email + "</td>");
-								out.print("<td>" + source + "</td>");
-								out.print("<td>" + dates + "</td>");
-								out.print("<td>" + owner + "</td>");
-								if (priority.equals("Low")){
-									
-									out.print("<td><center><div class = 'animated-progress progress-green'><span data-progress='33'></span>Low</div></div></center></td>");
-								}
-								if (priority.equals("High")){
-									
-									out.print("<td><center><div class = 'animated-progress progress-red'><span data-progress='95'></span>High</div></div></center></td>");
-								}
-								if (priority.equals("Medium")){
-	
-									out.print("<td><center><div class = 'animated-progress progress-purple'><span data-progress='66'></span>Medium</div></div></center></td>");
-								}
+								out.print("<td>" + mobile + "</td>");
 								
-								out.print("<td><form action ='updateMyLead.jsp' method = 'post'><button type = 'submit' class = 'btn btn-primary'  name = 'update' value = '+ "+email+"+'>Update</button></form></td>");
-								out.print("<td><form action ='deleteMyLead' method = 'post'><button type = 'submit' class = 'btn btn-danger' name = 'delete' value = '+ "+email+"+' onclick='myFunction()'>Delete</button></form></td>");
+								out.print("<td><form action ='deleteAdminUsers' method = 'post'><button type = 'submit' class = 'btn btn-danger' name = 'delete' value = '+ "+email+"+' onclick='myFunction()'>Delete</button></form></td>");
 				
 								out.print("</tr>");
 							

@@ -1,20 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-    <%@page import="java.sql.DriverManager"%>
+     <%@page import="java.sql.DriverManager"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.Connection"%>
 <%@page import = "in.pandit.persistance.DatabaseConnection" %>
-<%@page import = "java.util.List" %>
-<%@page import = "java.util.ArrayList" %>
+<%@page import ="java.text.SimpleDateFormat"%>
+<%@page import = "java.util.Date"  %>
 <%@page import = "java.text.SimpleDateFormat" %>
 <%@page import = "java.util.Date" %>
-    
-<html>
+
+<!Doctype HTML>
+	<html>
 	<head>
-		<title>User Dashboard</title>
+		<title></title>
 		<link rel="stylesheet" href="css/style.css" type="text/css"/>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<!-- cdn for table with pagination -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		
 <style>
 body{
 	margin:0px;
@@ -48,7 +52,6 @@ body{
   transition: 0.5s;
   padding-top: 30px;
 }
-
 .sidenav a {
   padding: 15px 8px 15px 32px;
   text-decoration: none;
@@ -83,21 +86,20 @@ body{
 	display: inline-block;
 	float: right;
 	width: 160px;
-	
 }
 .pro-img{
 	float: left;
 	width: 40px;
 	margin-top: 5px;
 	margin-left: -80px;
+	border-radius: 50px;
 }
 .profile p{
 	color: white;
 	font-weight: 500;
-	margin-left: -60px;
-	margin-top: 5px;
+	margin-left: -70px;
+	margin-top: 4px;
 	font-size: 13.5px;
-	width: 200px;
 }
 .profile p span{
 	font-weight: 400;
@@ -234,10 +236,11 @@ td, th {
   font-weight: 700;
   font-size: 2em;
 }
+
 /* Css for add lead form */
 .boxheading{
 	width: 96%;
-	height: 50px;
+	height: 550px;
 	background-color: #272c4a;
 	margin-left: 10px;
 	padding:10px;
@@ -250,32 +253,61 @@ td, th {
     margin-top: 7px;
     display: inline-block;
 }
-.boxform{
-	width: 96%;
-	height: 470px;
-	background-color: #272c4a;
-	margin-left: 10px;
-	padding:10px;
+/* Table Desing */
+
+
+table th , table td{
+    text-align: center;
+}
+
+table tr:nth-child(even){
+    background-color: #1b203d;
+}
+
+.pagination li:hover{
+    cursor: pointer;
+}
+		table tbody tr {
+			display: none;
+		}
+
+/* Profile Image Styling */
+.profile-img{
+	float: left;
+	width: 60px;
+	margin-top: 5px;
+	border-radius: 50px;
+}
+
+.btnUpdate{
+	
+	padding: 5px 30px 5px 30px;
+	border: 1px solid white;
+	border-radius: 10px;
+	background-color: transparent;
+	color: white;
+}
+.btnUpdate:hover{
+	background-color: green;
+	border: none;
+	color: white;
+	transition: 0.5s ease all;
+	box-shadow: 0px 25px 80px rgba(217, 254, 244, 0.8);
+}
+label{
+	color: white;
+	font-size: 20px;
 }
 input{
 	border: none;
-	border-radius: 2px;
-	padding: 7px;
-	height: 30px;
+	border-radius: 5px;
+	padding: 10px;
+	height: 35px;
 	width: 250px;
 	font-size: 17px;
-	background-color: off-white;
+	background-color: transparent;
+	color: white;
 }
-select{
-	border: none;
-	border-radius: 2px;
-	padding: 7px;
-	height: 30px;
-	width: 250px;
-	font-size: 17px;
-	background-color: off-white;
-}
-
 input[type=text] {
   margin: 8px 0;
   box-sizing: border-box;
@@ -287,20 +319,6 @@ input[type=text] {
 
 input[type=text]:focus {
   border: 2px solid green;
-}
-.btn{
-	width: 250px;
-	height: 35px;
-	background-color: rgba(12, 188, 6, 0.8);
-	font-size: 15px;
-	color: white;
-	border: none;
-	border-radius: 5px;
-}
-.btn:hover{
-	box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
-	transition: 0.5s ease;
-	background-color: rgba(7, 217, 0, 0.8);
 }
 .logBtn{
 	width: 100%;
@@ -319,20 +337,16 @@ input[type=text]:focus {
   color: #f1f1f1;
   background-color:#1b203d;
 }
-
 </style>
-<!-- This cdn is for sweet alert -->
-<script src=
-"https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js">
-  </script>
-  
-  <script src="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://common.olemiss.edu/_js/sweet-alert/sweet-alert.css">
+
+
 </head>
 
-<body>
-	<% 
-		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // Preventing from back after logout.
+
+	<body>
+		
+		<% 
+		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		if(session.getAttribute("email") == null)
 		{
 			out.println("<script type=\"text/javascript\">");
@@ -341,22 +355,17 @@ input[type=text]:focus {
 			response.sendRedirect("index.jsp");
 		}
 	%>
-	
-	<%
-	if (request.getAttribute("messages") != null) {
-		out.print("<script>swal('Thank You!', 'We will get in touch soon!', 'success')</script>");
-	}
-	%>
-	
-	<div id="mySidenav" class="sidenav">
+		
+		<div id="mySidenav" class="sidenav">
 		<p class="logo"><span>L </span>M S</p>
-	  <a href="dashboard.jsp" class="icon-a"><i class="fa fa-dashboard icons"></i>   Dashboard</a>
-	  <a href="myLeads.jsp"class="icon-a"><i class="fa fa-line-chart icons"></i>   My Leads</a>
-	  <a href="currentLead.jsp"class="icon-a"><i class="fa fa-bar-chart icons"></i>   Current Leads</a>
-	  <a href="profile.jsp"class="icon-a"><i class="fa fa-user-circle icons"></i>   Profile</a>
-	  <a href="help.jsp"class="icon-a"><i class="fa fa-question-circle icons"></i>   Help</a>
+	  <a href="superadmin.jsp" class="icon-a"><i class="fa fa-dashboard icons"></i>   Dashboard</a>
+	  <a href="allLeadsSuperAdmin.jsp"class="icon-a"><i class="fa fa-users icons"></i>   All Leads</a>
+	  <a href="allAdmin.jsp"class="icon-a"><i class="fa fa-user-plus icons"></i>   All Admin</a>
+	  <a href="allUsersSuperAdmin.jsp"class="icon-a"><i class="fa fa-users icons"></i>   All Users</a>
+	  <a href="superAdminProfile.jsp"class="icon-a"><i class="fa fa-user icons"></i>   Profile</a>
+	  <a href="superAdminHelp.jsp"class="icon-a"><i class="fa fa-question-circle icons"></i>   Help</a>
 	  <form action = "logout" method = "post"><a href="#"class="icon-a"><button type = "submit" class = "logBtn"><i class="fa fa-sign-out icons"></i> Logout</button></a></form> 
-	  <div class = "timeDate">
+		 <div class = "timeDate">
 	  	<p style = "margin-top: 390px; margin-left: 5px; font-size: 18px; color: gray;">Date and Time</p>
 	  	<%
 	  		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
@@ -365,13 +374,12 @@ input[type=text]:focus {
 	  	%>
 	  </div>
 	</div>
-	
 	<div id="main">
 
 		<div class="head">
 			<div class="col-div-6">
-	<span style="font-size:30px;cursor:pointer; color: white;" class="nav"  > Dashboard</span>
-	<span style="font-size:30px;cursor:pointer; color: white;" class="nav2"  > Dashboard</span>
+	<span style="font-size:30px;cursor:pointer; color: white;" class="nav"  > My Profile</span>
+	<span style="font-size:30px;cursor:pointer; color: white;" class="nav2"  > My Profile</span>
 	</div>
 		
 		<div class="col-div-6">
@@ -399,8 +407,6 @@ input[type=text]:focus {
 					System.out.println(e);
 				}
 			%>
-			
-			
 		</div>
 	</div>
 		<div class="clearfix"></div>
@@ -411,30 +417,31 @@ input[type=text]:focus {
 		
 		<div class="col-div-3">
 			<div class="box">
-				<p> <%
-				Connection connect = DatabaseConnection.getConnection();
-				int c = 0;
-				PreparedStatement stt = connect.prepareStatement("SELECT COUNT(id) from leads");
+				<p>
+					<%
+						Connection connect = DatabaseConnection.getConnection();
+						int count = 0;
+						PreparedStatement st = connect.prepareStatement("select max(id) as id from leads");
 
-				ResultSet rset = stt.executeQuery();
-				if (rset.next()) {
-				c = rset.getInt(1);
-				}
-				out.print(c);
+						ResultSet rs = st.executeQuery();
+						while (rs.next()) {
+						count = rs.getInt("id");
+						}
+						out.print(count);
 					%> 
-	<br/><span>Total Leads</span></p>
-				<i class="fa fa-line-chart box-icon"></i>
+				<br/><span>Total Leads</span></p>
+				<i class="fa fa-users box-icon"></i>
 			</div>
 		</div>
 		<div class="col-div-3">
 			<div class="box">
-				<p>1<br/><span>New Leads</span></p>
+				<p>0<br/><span>New Leads</span></p>
 				<i class="fa fa-cart-plus box-icon"></i>
 			</div>
 		</div>
 		<div class="col-div-3">
 			<div class="box">
-				<p>2<br/><span>Social Media</span></p>
+				<p>0<br/><span>Social Media</span></p>
 				<i class="fa fa-globe box-icon"></i>
 			</div>
 		</div>
@@ -444,7 +451,6 @@ input[type=text]:focus {
 				<i class="fa fa-tasks box-icon"></i>
 			</div>
 		</div>
-		
 		
 		<div class="clearfix"></div>
 		<br/>
@@ -456,123 +462,60 @@ input[type=text]:focus {
 		
 		<div class="col-12">
 			<div class="boxheading">
-				<p>Add New Lead</p>
-				<%
-					
-				%>
-			</div>
-		</div>
-		<hr style="width:97%;text-align:left;margin-left:10px">
-		<div class="col-12">
-			<div class="boxform">
-				<form action = "addNewLead" method = "post">
-					<table>
-						<tr>
-							<td>Name </td>
-							<td><input type = "text" name = "name" required/></td>
-							<td>Email </td>
-							<td><input type = "email" name = "email" required/></td>
-						</tr>
-						<tr>
-							<td>Address </td>
-							<td><input type = "text" name = "address" required/></td>
-							<td>Mobile </td>
-							<td><input type = "tel" name = "mobile" maxlength= "10" required/></td>
-						</tr>
-						<tr>
-							<td>Source </td>
-							<td><input type = "text" name = "source" required/></td>
-							<td>Date </td>
-							<td><input type = "date" name = "date" required/></td>
-						</tr>
-						<tr>
-							<td>Time </td>
-							<td><input type = "time" name = "time" required/></td>
-							<td>Owner Email</td>
-							
-							
-							<td>
-								<input type = "email" name = "owner"  value = "<% 
-								
-								List<String> lst = new ArrayList<String>();
-								try{
-									String email = session.getAttribute("email").toString();
-									PreparedStatement pstmt = connect.prepareStatement("select email from users where email = ?");			
-									pstmt.setString(1, email);
-									ResultSet rst = pstmt.executeQuery();
-					
-									while(rst.next()) {
-										lst.add(rst.getString(1));
-									}
-									for(String x : lst){
-										out.print(x);											}
-									}catch(Exception e){
-										System.out.println(e);
-									}
-								
-								%>" readonly>
+				<p style = "margin-top: 20px;">Update Profile</p>
+				<img src="image/profile image.png" class="profile-img" />	
+				<hr style="height:2px;border-width:0;color:gray;background-color:gray">
+			
+		<div class="container-fluid">
+				<div class="form-group"> 	
+				<br>
+				
+				<% 
 						
-							</td>
+				String name = null;
+				String emailid = null;
+				String mobile = null;
+				try{
+							String email =  session.getAttribute("email").toString(); 
 							
-						</tr>
-						<tr>
-							<td>Current Owner </td>
-							<td>
-							<select name = "currentOwner" required>
-								<option selected disabled > --Select--</option>
-								<%
-										List<String> lst1 = new ArrayList<String>();
-										try{
-											String email = session.getAttribute("email").toString();
-											PreparedStatement pstmt = connect.prepareStatement("select email from users");			
-														
-											ResultSet rst = pstmt.executeQuery();
+							Connection connect1 = DatabaseConnection.getConnection();
 							
-											while(rst.next()) {
-												lst1.add(rst.getString(1));
-											}
-											for(String x : lst1){
-												out.print("<option>" + x + "</option>");											}
-											}catch(Exception e){
-												System.out.println(e);
-											}
-									%>
-							</select>
-							</td>
 							
-							<td>Status </td>
-							<td>
-							<select name = "status" required>
-								<option selected disabled > --Select--</option>
-								<option>New</option>
-								<option>Progress</option>
-								<option>Finished</option>
-							</select>
-							</td>
-						</tr>
-						<tr>
-							<td>Priority </td>
-							<td>
-							<select name = "priority" required>
-								<option selected disabled > --Select--</option>
-								<option>Low</option>
-								<option>Medium</option>
-								<option>High</option>
-							</select>
-							</td>
-							<td></td>
-							<td><button type= "submit" class = "btn">Add Lead</button></td>
-						</tr>		
-					</table>
+							PreparedStatement pstmt = connect1.prepareStatement("select name, email, mobile from users where email = ?");			
+							pstmt.setString(1, email);			
+							ResultSet rst = pstmt.executeQuery();
+						
+						while (rst.next()) {
+							name = rst.getString(1);
+							emailid = rst.getString(2);
+							mobile = rst.getString(3);
+						}
+						
+						session.setAttribute("name", name);
+						
+						}catch(Exception e){
+							System.out.println(e);
+						}
+					%>
+				
+				<form action = "udpateSuperAdminProfile" method = "post">
+					<label>Name</label><br>
+					<input type = "text" name = "name" value = "<% out.print(name); %>" required/><br><br>
+					<label>Email</label><br>
+					<input type = "text" name = "email" value = "<% out.print(emailid); %>" readonly/><br><br>
+					<label>Mobile</label><br>
+					<input type = "text" name = "mobile" value = "<% out.print(mobile); %>" maxlength="10" required/><br><br>
+					<button type= "submit" class ="btnUpdate">Update</button>
 				</form>
-			</div>
-		</div>	
-		
-		
-			<br><br><br><br><br><br>
-		
+				
+			 
 		</div>
 
+		</div>
+		
+		</div>
+		</div>
+		</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script>
 
@@ -598,10 +541,11 @@ input[type=text]:focus {
 	     $(".nav").css('display','block');
 	      $(".nav2").css('display','none');
 	 });
+	
 
 	</script>
-	
+
 	</body>
 
-</body>
-</html>
+
+	</html>

@@ -4,19 +4,18 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 import in.pandit.persistance.DatabaseConnection;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 
-@WebServlet("/addNewLead")
-public class addNewLead extends HttpServlet {
+@WebServlet("/updateAdminAllLeads")
+public class updateAdminAllLeads extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
    
@@ -26,9 +25,8 @@ public class addNewLead extends HttpServlet {
 		String email = request.getParameter("email");
 		String address = request.getParameter("address");
 		String mobile = request.getParameter("mobile");
-		String source = request.getParameter("source").toLowerCase();
+		String source = request.getParameter("source");
 		String date = request.getParameter("date");
-		String time = request.getParameter("time");
 		String owner = request.getParameter("owner");
 		String currentOwner = request.getParameter("currentOwner");
 		String status = request.getParameter("status");
@@ -37,37 +35,25 @@ public class addNewLead extends HttpServlet {
 		try {
 			Connection connect = DatabaseConnection.getConnection();
 			
-//			 Fetching max id from sign up table for auto increment id
-			int count = 0;
-			PreparedStatement st = connect.prepareStatement("select max(id) as id from leads");
-
-			ResultSet rs = st.executeQuery();
-			while (rs.next()) {
-				count = rs.getInt("id");
-			}
-			
 			
 			// Inserting data into data base
-			PreparedStatement stmt = connect.prepareStatement("insert into leads values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			stmt.setInt(1, ++count);
-			stmt.setString(2, name);
-			stmt.setString(3, email);
-			stmt.setString(4, address);
-			stmt.setString(5, mobile);
-			stmt.setString(6, source);
-			stmt.setString(7, date);
-			stmt.setString(8, time);
-			stmt.setString(9, owner);
-			stmt.setString(10, currentOwner);
-			stmt.setString(11, status);
-			stmt.setString(12, priority);
+			PreparedStatement stmt = connect.prepareStatement("update leads set name = ?, email = ?, address = ?, mobile = ?, source = ?, date = ?, owner = ?, currentOwner = ?, status = ?, priority = ? where email = ?");
+			stmt.setString(1, name);
+			stmt.setString(2, email);
+			stmt.setString(3, address);
+			stmt.setString(4, mobile);
+			stmt.setString(5, source);
+			stmt.setString(6, date);
+			stmt.setString(7, owner);
+			stmt.setString(8, currentOwner);
+			stmt.setString(9, status);
+			stmt.setString(10, priority);
+			stmt.setString(11, email);
 			int insert = stmt.executeUpdate();
 		if(insert > 0) {
-			pw.println("<script type=\"text/javascript\">");
-			pw.println("alert('Lead added successfully');");
-			pw.println("</script>");
-			RequestDispatcher rd = request.getRequestDispatcher("myLeads.jsp");
-			rd.include(request, response);
+			HttpSession session = request.getSession();
+			session.setAttribute("updateMsg", "Data updated successfully");
+			response.sendRedirect("allLeads.jsp");
 			
 		}
 		else {

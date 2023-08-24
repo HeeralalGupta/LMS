@@ -421,15 +421,15 @@ table tr:nth-child(even){
 			<div class="box">
 				<p>
 					<%
-						Connection connect1 = DatabaseConnection.getConnection();
-						int count1 = 0;
-						PreparedStatement st1 = connect1.prepareStatement("select max(id) as id from leads");
+					Connection conn = DatabaseConnection.getConnection();
+					int c = 0;
+					PreparedStatement stt = conn.prepareStatement("SELECT COUNT(id) from leads");
 
-						ResultSet rs2 = st1.executeQuery();
-						while (rs2.next()) {
-						count1 = rs2.getInt("id");
-						}
-						out.print(count1);
+					ResultSet rset = stt.executeQuery();
+					if (rset.next()) {
+					c = rset.getInt(1);
+					}
+					out.print(c);
 					%> 
 				<br/><span>Total Leads</span></p>
 				<i class="fa fa-users box-icon"></i>

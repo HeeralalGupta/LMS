@@ -12,7 +12,7 @@
     
 <html>
 	<head>
-		<title>User Dashboard</title>
+		<title>Admin Dashboard</title>
 		<link rel="stylesheet" href="css/style.css" type="text/css"/>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
@@ -350,11 +350,11 @@ input[type=text]:focus {
 	
 	<div id="mySidenav" class="sidenav">
 		<p class="logo"><span>L </span>M S</p>
-	  <a href="dashboard.jsp" class="icon-a"><i class="fa fa-dashboard icons"></i>   Dashboard</a>
-	  <a href="myLeads.jsp"class="icon-a"><i class="fa fa-line-chart icons"></i>   My Leads</a>
-	  <a href="currentLead.jsp"class="icon-a"><i class="fa fa-bar-chart icons"></i>   Current Leads</a>
-	  <a href="profile.jsp"class="icon-a"><i class="fa fa-user-circle icons"></i>   Profile</a>
-	  <a href="help.jsp"class="icon-a"><i class="fa fa-question-circle icons"></i>   Help</a>
+	  <a href="admin.jsp" class="icon-a"><i class="fa fa-dashboard icons"></i>   Dashboard</a>
+	  <a href="allLeads.jsp"class="icon-a"><i class="fa fa-line-chart icons"></i>   All Leads</a>
+	  <a href="allUsers.jsp"class="icon-a"><i class="fa fa-user-plus icons"></i>   All Users</a>
+	  <a href="adminProfile.jsp"class="icon-a"><i class="fa fa-user-circle icons"></i>   Profile</a>
+	  <a href="adminHelp.jsp"class="icon-a"><i class="fa fa-question-circle icons"></i>   Help</a>
 	  <form action = "logout" method = "post"><a href="#"class="icon-a"><button type = "submit" class = "logBtn"><i class="fa fa-sign-out icons"></i> Logout</button></a></form> 
 	  <div class = "timeDate">
 	  	<p style = "margin-top: 390px; margin-left: 5px; font-size: 18px; color: gray;">Date and Time</p>
@@ -428,20 +428,56 @@ input[type=text]:focus {
 		</div>
 		<div class="col-div-3">
 			<div class="box">
-				<p>1<br/><span>New Leads</span></p>
-				<i class="fa fa-cart-plus box-icon"></i>
+				<p>
+					<%
+				
+				int d = 0;
+				PreparedStatement stmtt = connect.prepareStatement("SELECT COUNT(id) from users where isadmin = ? and issuperadmin = ?");
+				stmtt.setString(1, "false");
+				stmtt.setString(2, "false");
+				ResultSet rsett = stmtt.executeQuery();
+				if (rsett.next()) {
+				d = rsett.getInt(1);
+				}
+				out.print(d);
+					%>			
+				<br/><span>All Users</span></p>
+				<i class="fa fa-users box-icon"></i>
 			</div>
 		</div>
 		<div class="col-div-3">
 			<div class="box">
-				<p>2<br/><span>Social Media</span></p>
-				<i class="fa fa-globe box-icon"></i>
+				<p>
+					<%
+				
+				int f = 0;
+				PreparedStatement stm = connect.prepareStatement("SELECT COUNT(source) from leads where source = ?");
+				stm.setString(1, "facebook");
+				ResultSet rstt = stm.executeQuery();
+				if (rstt.next()) {
+				f = rstt.getInt(1);
+				}
+				out.print(f);
+					%>
+				<br/><span>Facebook Leads</span></p>
+				<i class="fa fa-facebook-square box-icon"></i>
 			</div>
 		</div>
 		<div class="col-div-3">
 			<div class="box">
-				<p>0<br/><span>Enrolled</span></p>
-				<i class="fa fa-tasks box-icon"></i>
+				<p>
+				<%
+					int g = 0;
+				PreparedStatement stmt = connect.prepareStatement("SELECT COUNT(source) from leads where source = ?");
+				stmt.setString(1, "google");
+				ResultSet rtt = stmt.executeQuery();
+				if (rtt.next()) {
+				g = rtt.getInt(1);
+				}
+				out.print(g);
+					%>
+				<br/><span>Google Leads</span></p>
+				<i class="fa fa-google-plus box-icon"></i>
 			</div>
 		</div>
 		
@@ -465,7 +501,7 @@ input[type=text]:focus {
 		<hr style="width:97%;text-align:left;margin-left:10px">
 		<div class="col-12">
 			<div class="boxform">
-				<form action = "addNewLead" method = "post">
+				<form action = "addLeadsAdmin" method = "post">
 					<table>
 						<tr>
 							<td>Name </td>

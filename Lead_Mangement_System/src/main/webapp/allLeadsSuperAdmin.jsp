@@ -10,7 +10,7 @@
 <!Doctype HTML>
 	<html>
 	<head>
-		<title></title>
+		<title>All Leads</title>
 		<link rel="stylesheet" href="css/style.css" type="text/css"/>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<!-- cdn for table with pagination -->
@@ -362,15 +362,16 @@ table tr:nth-child(even){
 		
 		<div id="mySidenav" class="sidenav">
 		<p class="logo"><span>L </span>M S</p>
-	  <a href="dashboard.jsp" class="icon-a"><i class="fa fa-dashboard icons"></i>   Dashboard</a>
-	  <a href="myLeads.jsp"class="icon-a"><i class="fa fa-users icons"></i>   My Leads</a>
-	  <a href="currentLead.jsp"class="icon-a"><i class="fa fa-user-plus icons"></i>   Current Leads</a>
-	  <a href="profile.jsp"class="icon-a"><i class="fa fa-user icons"></i>   Profile</a>
-	  <a href="help.jsp"class="icon-a"><i class="fa fa-question-circle icons"></i>   Help</a>
+	  <a href="superadmin.jsp" class="icon-a"><i class="fa fa-dashboard icons"></i>   Dashboard</a>
+	  <a href="allLeadsSuperAdmin.jsp"class="icon-a"><i class="fa fa-line-chart icons"></i>   All Leads</a>
+	  <a href="allAdmin.jsp"class="icon-a"><i class="fa fa-user-circle icons"></i>   All Admin</a>
+	  <a href="allUsersSuperAdmin.jsp"class="icon-a"><i class="fa fa-users icons"></i>   All Users</a>
+	  <a href="superAdminProfile.jsp"class="icon-a"><i class="fa fa-user icons"></i>   Profile</a>
+	  <a href="superAdminHelp.jsp"class="icon-a"><i class="fa fa-question-circle icons"></i>   Help</a>
 	 
 	  <form action = "logout" method = "post"><a href="#"class="icon-a"><button type = "submit" class = "logBtn"><i class="fa fa-sign-out icons"></i> Logout</button></a></form> 
 		 <div class = "timeDate">
-	  	<p style = "margin-top: 375px; margin-left: 5px; font-size: 18px; color: gray;">Date and Time</p>
+	  	<p style = "margin-top: 320px; margin-left: 5px; font-size: 18px; color: gray;">Date and Time</p>
 	  	<%
 	  		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
 			Date date = new Date();
@@ -382,8 +383,8 @@ table tr:nth-child(even){
 
 		<div class="head">
 			<div class="col-div-6">
-	<span style="font-size:30px;cursor:pointer; color: white;" class="nav"  > My Leads</span>
-	<span style="font-size:30px;cursor:pointer; color: white;" class="nav2"  > My Leads</span>
+	<span style="font-size:30px;cursor:pointer; color: white;" class="nav"  > All Leads</span>
+	<span style="font-size:30px;cursor:pointer; color: white;" class="nav2"  > All Leads</span>
 	</div>
 		
 		<div class="col-div-6">
@@ -434,19 +435,45 @@ table tr:nth-child(even){
 					out.print(c);
 					%> 
 				<br/><span>Total Leads</span></p>
+				<i class="fa fa-line-chart box-icon"></i>
+			</div>
+		</div>
+		<div class="col-div-3">
+			<div class="box">
+				<p>
+					<%
+				
+				int d = 0;
+				PreparedStatement stmtt = conn.prepareStatement("SELECT COUNT(id) from users where isadmin = ? and issuperadmin = ?");
+				stmtt.setString(1, "false");
+				stmtt.setString(2, "false");
+				ResultSet rsett = stmtt.executeQuery();
+				if (rsett.next()) {
+				d = rsett.getInt(1);
+				}
+				out.print(d);
+					%>
+				<br/><span>All Users</span></p>
 				<i class="fa fa-users box-icon"></i>
 			</div>
 		</div>
 		<div class="col-div-3">
 			<div class="box">
-				<p>0<br/><span>New Leads</span></p>
-				<i class="fa fa-cart-plus box-icon"></i>
-			</div>
-		</div>
-		<div class="col-div-3">
-			<div class="box">
-				<p>0<br/><span>Social Media</span></p>
-				<i class="fa fa-globe box-icon"></i>
+				<p>
+					<%
+				
+				int f = 0;
+				PreparedStatement stm = conn.prepareStatement("SELECT COUNT(id) from users where isadmin = ? and issuperadmin = ?");
+				stm.setString(1, "a");
+				stm.setString(2, "false");
+				ResultSet rse = stm.executeQuery();
+				if (rse.next()) {
+				f = rse.getInt(1);
+				}
+				out.print(f);
+					%>
+				<br/><span>All Admin</span></p>
+				<i class="fa fa-user-circle box-icon"></i>
 			</div>
 		</div>
 		<div class="col-div-3">
@@ -541,10 +568,10 @@ table tr:nth-child(even){
 				count = rs1.getInt("id");
 				}
 				
-  				PreparedStatement ps = connect.prepareStatement("select name, email, source, date, priority from leads where owner = ?");
+  				PreparedStatement ps = connect.prepareStatement("select name, email, source, date, owner, priority from leads");
 				
 				 /* for (int a = 1; a <= count; a++) {  */
-							ps.setString(1, email2);		
+									
 					 
 							ResultSet rs = ps.executeQuery();
 							while (rs.next()) {
@@ -553,7 +580,9 @@ table tr:nth-child(even){
 								String email = rs.getString(2);
 								String source = rs.getString(3);
 								String dates = rs.getString(4);
-								String priority = rs.getString(5);
+								String owners = rs.getString(5);
+								String priority = rs.getString(6);
+								
 								
 												
 								out.print("<tr>");
@@ -562,7 +591,7 @@ table tr:nth-child(even){
 								out.print("<td>" + email + "</td>");
 								out.print("<td>" + source + "</td>");
 								out.print("<td>" + dates + "</td>");
-								out.print("<td>" + owner + "</td>");
+								out.print("<td>" + owners + "</td>");
 								if (priority.equals("Low")){
 									
 									out.print("<td><center><div class = 'animated-progress progress-green'><span data-progress='33'></span>Low</div></div></center></td>");
@@ -576,8 +605,8 @@ table tr:nth-child(even){
 									out.print("<td><center><div class = 'animated-progress progress-purple'><span data-progress='66'></span>Medium</div></div></center></td>");
 								}
 								
-								out.print("<td><form action ='updateMyLead.jsp' method = 'post'><button type = 'submit' class = 'btn btn-primary'  name = 'update' value = '+ "+email+"+'>Update</button></form></td>");
-								out.print("<td><form action ='deleteMyLead' method = 'post'><button type = 'submit' class = 'btn btn-danger' name = 'delete' value = '+ "+email+"+' onclick='myFunction()'>Delete</button></form></td>");
+								out.print("<td><form action ='updateSuperAdminAllLeads.jsp' method = 'post'><button type = 'submit' class = 'btn btn-primary'  name = 'update' value = '+ "+email+"+'>Update</button></form></td>");
+								out.print("<td><form action ='allLeadsSuperAdmin' method = 'post'><button type = 'submit' class = 'btn btn-danger' name = 'delete' value = '+ "+email+"+' onclick='myFunction()'>Delete</button></form></td>");
 				
 								out.print("</tr>");
 							
